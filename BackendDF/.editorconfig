@@ -1,0 +1,20 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+indent_style = space
+trim_trailing_whitespace = true
+
+[*.cs]
+indent_size = 4
+# Usings ordenados y sin no usados
+dotnet_sort_system_directives_first = true
+csharp_using_directive_placement = outside_namespace:suggestion
+
+[*.{json,jsonc}]
+indent_size = 2
+
+[*.{csproj,sln}]
+indent_style = tab

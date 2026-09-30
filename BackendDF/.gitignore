@@ -1,0 +1,20 @@
+## .NET
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+.vs/
+
+## Rider / VS Code
+.idea/
+.vscode/
+
+## Secrets locales (nunca commitear)
+appsettings.*.Local.json
+secrets.json
+*.pfx
+
+## Datos JSON (≈ 2,5 GB): se copian a mano o se montan; no van al repositorio
+src/BackendDF/Database/**/*.json

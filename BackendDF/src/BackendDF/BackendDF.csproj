@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>BackendDF</RootNamespace>
+    <UserSecretsId>plantilla-api-idce-0001</UserSecretsId>
+    <!-- Los comentarios XML de los controllers alimentan Swagger. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+    <!-- Workstation GC: con los datos en memoria el Server GC retiene >1,8 GB; así queda en ≈ 450 MB
+         con la caché de entidades llena (meta del contrato §12: < 1,5 GB). -->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Autenticación: validación del JWT (Supabase hoy, SSO propio después) -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
+
+    <!-- Swagger / OpenAPI -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- La "BD" JSON (≈ 2,5 GB) se lee desde disco: no se copia a bin/publish ni se sirve como estática. -->
+    <Content Remove="Database\**" />
+    <None Remove="Database\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="BackendDF.Tests" />
+  </ItemGroup>
+
+</Project>
