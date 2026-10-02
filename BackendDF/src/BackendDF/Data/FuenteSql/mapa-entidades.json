@@ -1,0 +1,1379 @@
+{
+ "_descripcion": "Mapa slug del backend (entidades_lista.json:archivo) -> IFIID/RUC de idce_bco_coop.dbo.Ifi. Clave estable: ruc; ifiId se valida al iniciar.",
+ "entidades": [
+  {
+   "archivo": "BP__AMAZONAS",
+   "ifiId": 184,
+   "ruc": "1790221806001",
+   "nombre": "BP. AMAZONAS"
+  },
+  {
+   "archivo": "BP__ATLANTIDA",
+   "ifiId": 291,
+   "ruc": "0992701374001",
+   "nombre": "BP. ATLANTIDA"
+  },
+  {
+   "archivo": "BP__AUSTRO",
+   "ifiId": 171,
+   "ruc": "0190055965001",
+   "nombre": "BP. AUSTRO"
+  },
+  {
+   "archivo": "BP__BANCODESARROLLO",
+   "ifiId": 290,
+   "ruc": "0990247536001",
+   "nombre": "BP. BANCODESARROLLO"
+  },
+  {
+   "archivo": "BP__BOLIVARIANO",
+   "ifiId": 101,
+   "ruc": "0990379017001",
+   "nombre": "BP. BOLIVARIANO"
+  },
+  {
+   "archivo": "BP__CAPITAL",
+   "ifiId": 130,
+   "ruc": "1090105244001",
+   "nombre": "BP. CAPITAL"
+  },
+  {
+   "archivo": "BP__CITIBANK",
+   "ifiId": 66,
+   "ruc": "1790033295001",
+   "nombre": "BP. CITIBANK"
+  },
+  {
+   "archivo": "BP__COMERCIAL_DE_MANABI",
+   "ifiId": 255,
+   "ruc": "1390067506001",
+   "nombre": "BP. COMERCIAL DE MANABI"
+  },
+  {
+   "archivo": "BP__COOPNACIONAL",
+   "ifiId": 254,
+   "ruc": "0990459444001",
+   "nombre": "BP. COOPNACIONAL"
+  },
+  {
+   "archivo": "BP__DELBANK",
+   "ifiId": 52,
+   "ruc": "0990048673001",
+   "nombre": "BP. DELBANK"
+  },
+  {
+   "archivo": "BP__DINERS_CLUB",
+   "ifiId": 111,
+   "ruc": "1790283380001",
+   "nombre": "BP. DINERS CLUB"
+  },
+  {
+   "archivo": "BP__GUAYAQUIL",
+   "ifiId": 148,
+   "ruc": "0990049459001",
+   "nombre": "BP. GUAYAQUIL"
+  },
+  {
+   "archivo": "BP__INTERNACIONAL",
+   "ifiId": 333,
+   "ruc": "1790098354001",
+   "nombre": "BP. INTERNACIONAL"
+  },
+  {
+   "archivo": "BP__LITORAL",
+   "ifiId": 73,
+   "ruc": "0990981930001",
+   "nombre": "BP. LITORAL"
+  },
+  {
+   "archivo": "BP__LOJA",
+   "ifiId": 247,
+   "ruc": "1190002213001",
+   "nombre": "BP. LOJA"
+  },
+  {
+   "archivo": "BP__MACHALA",
+   "ifiId": 126,
+   "ruc": "0790002350001",
+   "nombre": "BP. MACHALA"
+  },
+  {
+   "archivo": "BP__PACIFICO",
+   "ifiId": 24,
+   "ruc": "0990005737001",
+   "nombre": "BP. PACIFICO"
+  },
+  {
+   "archivo": "BP__PICHINCHA",
+   "ifiId": 260,
+   "ruc": "1790010937001",
+   "nombre": "BP. PICHINCHA"
+  },
+  {
+   "archivo": "BP__PROCREDIT",
+   "ifiId": 11,
+   "ruc": "1791269225001",
+   "nombre": "BP. PROCREDIT"
+  },
+  {
+   "archivo": "BP__PRODUBANCO",
+   "ifiId": 271,
+   "ruc": "1790368718001",
+   "nombre": "BP. PRODUBANCO"
+  },
+  {
+   "archivo": "BP__RUMINAHUI",
+   "ifiId": 194,
+   "ruc": "1790864316001",
+   "nombre": "BP. RUMINAHUI"
+  },
+  {
+   "archivo": "BP__SOLIDARIO",
+   "ifiId": 283,
+   "ruc": "1791109384001",
+   "nombre": "BP. SOLIDARIO"
+  },
+  {
+   "archivo": "BP__VISIONFUND",
+   "ifiId": 45,
+   "ruc": "1091748041001",
+   "nombre": "BP. VISIONFUND"
+  },
+  {
+   "archivo": "COAC___13_DE_ABRIL",
+   "ifiId": 224,
+   "ruc": "1290029224001",
+   "nombre": "COAC.  13 DE ABRIL"
+  },
+  {
+   "archivo": "COAC___15_DE_ABRIL_LTDA",
+   "ifiId": 306,
+   "ruc": "1390013678001",
+   "nombre": "COAC.  15 DE ABRIL LTDA"
+  },
+  {
+   "archivo": "COAC___15_DE_AGOSTO_DE_PILACOTO",
+   "ifiId": 40,
+   "ruc": "0591713124001",
+   "nombre": "COAC.  15 DE AGOSTO DE PILACOTO"
+  },
+  {
+   "archivo": "COAC___16_DE_JULIO_LTDA",
+   "ifiId": 6,
+   "ruc": "1790499871001",
+   "nombre": "COAC.  16 DE JULIO LTDA"
+  },
+  {
+   "archivo": "COAC___16_DE_JUNIO",
+   "ifiId": 39,
+   "ruc": "0790088611001",
+   "nombre": "COAC.  16 DE JUNIO"
+  },
+  {
+   "archivo": "COAC___17_DE_MARZO_LIMITADA",
+   "ifiId": 187,
+   "ruc": "1792116449001",
+   "nombre": "COAC.  17 DE MARZO LIMITADA"
+  },
+  {
+   "archivo": "COAC___23_DE_JULIO_LIMITADA",
+   "ifiId": 222,
+   "ruc": "1790093204001",
+   "nombre": "COAC.  23 DE JULIO LIMITADA"
+  },
+  {
+   "archivo": "COAC___29_DE_OCTUBRE_LTDA",
+   "ifiId": 335,
+   "ruc": "1790567699001",
+   "nombre": "COAC.  29 DE OCTUBRE LTDA"
+  },
+  {
+   "archivo": "COAC___4_DE_OCTUBRE",
+   "ifiId": 302,
+   "ruc": "0691702324001",
+   "nombre": "COAC.  4 DE OCTUBRE"
+  },
+  {
+   "archivo": "COAC___4_RIOS",
+   "ifiId": 118,
+   "ruc": "1291713013001",
+   "nombre": "COAC.  4 RIOS"
+  },
+  {
+   "archivo": "COAC___9_DE_OCTUBRE_LTDA",
+   "ifiId": 259,
+   "ruc": "0590041920001",
+   "nombre": "COAC.  9 DE OCTUBRE LTDA"
+  },
+  {
+   "archivo": "COAC___ABDON_CALDERON_LTDA",
+   "ifiId": 74,
+   "ruc": "1390141463001",
+   "nombre": "COAC.  ABDON CALDERON LTDA"
+  },
+  {
+   "archivo": "COAC___ACCION_IMBABURAPAK_LTDA",
+   "ifiId": 132,
+   "ruc": "1091732935001",
+   "nombre": "COAC.  ACCION IMBABURAPAK LTDA"
+  },
+  {
+   "archivo": "COAC___ACCION_TUNGURAHUA_LTDA",
+   "ifiId": 161,
+   "ruc": "1891721796001",
+   "nombre": "COAC.  ACCION TUNGURAHUA LTDA"
+  },
+  {
+   "archivo": "COAC___AGRICOLA_JUNIN",
+   "ifiId": 51,
+   "ruc": "1391714246001",
+   "nombre": "COAC.  AGRICOLA JUNIN"
+  },
+  {
+   "archivo": "COAC___ALFONSO_JARAMILLO_LEON_CAJA",
+   "ifiId": 46,
+   "ruc": "0190087603001",
+   "nombre": "COAC.  ALFONSO JARAMILLO LEON CAJA"
+  },
+  {
+   "archivo": "COAC___ALIANZA_DEL_VALLE_LIMITADA",
+   "ifiId": 84,
+   "ruc": "1790501469001",
+   "nombre": "COAC.  ALIANZA DEL VALLE LIMITADA"
+  },
+  {
+   "archivo": "COAC___ALIANZA_MINAS_LTDA",
+   "ifiId": 19,
+   "ruc": "1790586863001",
+   "nombre": "COAC.  ALIANZA MINAS LTDA"
+  },
+  {
+   "archivo": "COAC___AMBATO_LTDA",
+   "ifiId": 186,
+   "ruc": "1891709591001",
+   "nombre": "COAC.  AMBATO LTDA"
+  },
+  {
+   "archivo": "COAC___ANDALUCIA_LIMITADA",
+   "ifiId": 128,
+   "ruc": "1790325083001",
+   "nombre": "COAC.  ANDALUCIA LIMITADA"
+  },
+  {
+   "archivo": "COAC___ANDINA_LTDA",
+   "ifiId": 164,
+   "ruc": "0591713094001",
+   "nombre": "COAC.  ANDINA LTDA"
+  },
+  {
+   "archivo": "COAC___ANGAHUANA",
+   "ifiId": 61,
+   "ruc": "1891742904001",
+   "nombre": "COAC.  ANGAHUANA"
+  },
+  {
+   "archivo": "COAC___ANTORCHA_LTDA",
+   "ifiId": 7,
+   "ruc": "0890011802001",
+   "nombre": "COAC.  ANTORCHA LTDA"
+  },
+  {
+   "archivo": "COAC___ARTESANOS_LTDA",
+   "ifiId": 80,
+   "ruc": "1090107174001",
+   "nombre": "COAC.  ARTESANOS LTDA"
+  },
+  {
+   "archivo": "COAC___ATUNTAQUI_LIMITADA",
+   "ifiId": 211,
+   "ruc": "1090033456001",
+   "nombre": "COAC.  ATUNTAQUI LIMITADA"
+  },
+  {
+   "archivo": "COAC___BASE_DE_TAURA",
+   "ifiId": 190,
+   "ruc": "0991501258001",
+   "nombre": "COAC.  BASE DE TAURA"
+  },
+  {
+   "archivo": "COAC___CACPE_CELICA",
+   "ifiId": 200,
+   "ruc": "1190078937001",
+   "nombre": "COAC.  CACPE CELICA"
+  },
+  {
+   "archivo": "COAC___CALCETA_LTDA",
+   "ifiId": 207,
+   "ruc": "1390001920001",
+   "nombre": "COAC.  CALCETA LTDA"
+  },
+  {
+   "archivo": "COAC___CAMARA_DE_COMERCIO_JOYA_DE_LOS_SACHAS_LTDA",
+   "ifiId": 81,
+   "ruc": "2290316947001",
+   "nombre": "COAC.  CAMARA DE COMERCIO JOYA DE LOS SACHAS LTDA"
+  },
+  {
+   "archivo": "COAC___CAMPESINA_COOPAC",
+   "ifiId": 119,
+   "ruc": "1891720978001",
+   "nombre": "COAC.  CAMPESINA COOPAC"
+  },
+  {
+   "archivo": "COAC___CANAR_LTDA",
+   "ifiId": 166,
+   "ruc": "0390000804001",
+   "nombre": "COAC.  CANAR LTDA"
+  },
+  {
+   "archivo": "COAC___CHIBULEO_LIMITADA",
+   "ifiId": 281,
+   "ruc": "1891710328001",
+   "nombre": "COAC.  CHIBULEO LIMITADA"
+  },
+  {
+   "archivo": "COAC___CHONE_LTDA",
+   "ifiId": 309,
+   "ruc": "1390007791001",
+   "nombre": "COAC.  CHONE LTDA"
+  },
+  {
+   "archivo": "COAC___CHUNCHI_LTDA",
+   "ifiId": 15,
+   "ruc": "0691729281001",
+   "nombre": "COAC.  CHUNCHI LTDA"
+  },
+  {
+   "archivo": "COAC___CIUDAD_DE_QUITO",
+   "ifiId": 156,
+   "ruc": "1790170047001",
+   "nombre": "COAC.  CIUDAD DE QUITO"
+  },
+  {
+   "archivo": "COAC___CIUDAD_DE_ZAMORA",
+   "ifiId": 243,
+   "ruc": "1990007124001",
+   "nombre": "COAC.  CIUDAD DE ZAMORA"
+  },
+  {
+   "archivo": "COAC___COCA_LTDA",
+   "ifiId": 226,
+   "ruc": "1590017589001",
+   "nombre": "COAC.  COCA LTDA"
+  },
+  {
+   "archivo": "COAC___COMERCIO_LTDA",
+   "ifiId": 297,
+   "ruc": "1390089410001",
+   "nombre": "COAC.  COMERCIO LTDA"
+  },
+  {
+   "archivo": "COAC___COOPAC_AUSTRO_LTDA",
+   "ifiId": 58,
+   "ruc": "0190093581001",
+   "nombre": "COAC.  COOPAC AUSTRO LTDA"
+  },
+  {
+   "archivo": "COAC___COOPROGRESO_LIMITADA",
+   "ifiId": 185,
+   "ruc": "1790451801001",
+   "nombre": "COAC.  COOPROGRESO LIMITADA"
+  },
+  {
+   "archivo": "COAC___COORAMBATO_LTDA",
+   "ifiId": 162,
+   "ruc": "1891720587001",
+   "nombre": "COAC.  COORAMBATO LTDA"
+  },
+  {
+   "archivo": "COAC___COORCOTOPAXI_LTDA",
+   "ifiId": 216,
+   "ruc": "0591714333001",
+   "nombre": "COAC.  COORCOTOPAXI LTDA"
+  },
+  {
+   "archivo": "COAC___CORPORACION_CENTRO_LTDA",
+   "ifiId": 189,
+   "ruc": "1791306589001",
+   "nombre": "COAC.  CORPORACION CENTRO LTDA"
+  },
+  {
+   "archivo": "COAC___CORPUCOOP_LTDA",
+   "ifiId": 192,
+   "ruc": "0190375811001",
+   "nombre": "COAC.  CORPUCOOP LTDA"
+  },
+  {
+   "archivo": "COAC___COTOCOLLAO_LTDA",
+   "ifiId": 332,
+   "ruc": "1790023508001",
+   "nombre": "COAC.  COTOCOLLAO LTDA"
+  },
+  {
+   "archivo": "COAC___CRECER_WINARI_LTDA",
+   "ifiId": 145,
+   "ruc": "1891726712001",
+   "nombre": "COAC.  CRECER WINARI LTDA"
+  },
+  {
+   "archivo": "COAC___CREDIAMBATO_LTDA",
+   "ifiId": 109,
+   "ruc": "1891713750001",
+   "nombre": "COAC.  CREDIAMBATO LTDA"
+  },
+  {
+   "archivo": "COAC___CREDIAMIGO_LTDA",
+   "ifiId": 175,
+   "ruc": "1191725669001",
+   "nombre": "COAC.  CREDIAMIGO LTDA"
+  },
+  {
+   "archivo": "COAC___CREDIL_LTDA",
+   "ifiId": 230,
+   "ruc": "1891735002001",
+   "nombre": "COAC.  CREDIL LTDA"
+  },
+  {
+   "archivo": "COAC___CREDIMAS",
+   "ifiId": 36,
+   "ruc": "1891745687001",
+   "nombre": "COAC.  CREDIMAS"
+  },
+  {
+   "archivo": "COAC___CREDI_FACIL_LTDA",
+   "ifiId": 99,
+   "ruc": "1891724787001",
+   "nombre": "COAC.  CREDI FACIL LTDA"
+  },
+  {
+   "archivo": "COAC___CREDI_YA_LTDA",
+   "ifiId": 95,
+   "ruc": "1891743005001",
+   "nombre": "COAC.  CREDI YA LTDA"
+  },
+  {
+   "archivo": "COAC___CRISTO_REY",
+   "ifiId": 28,
+   "ruc": "1190082462001",
+   "nombre": "COAC.  CRISTO REY"
+  },
+  {
+   "archivo": "COAC___DEL_AZUAY",
+   "ifiId": 182,
+   "ruc": "0190344169001",
+   "nombre": "COAC.  DEL AZUAY"
+  },
+  {
+   "archivo": "COAC___DEL_MAGISTERIO_DE_PICHINCHA",
+   "ifiId": 206,
+   "ruc": "1790495507001",
+   "nombre": "COAC.  DEL MAGISTERIO DE PICHINCHA"
+  },
+  {
+   "archivo": "COAC___DE_INDIGENAS_CHUCHUQUI_LTDA",
+   "ifiId": 139,
+   "ruc": "1090078263001",
+   "nombre": "COAC.  DE INDIGENAS CHUCHUQUI LTDA"
+  },
+  {
+   "archivo": "COAC___DE_LA_CAMARA_DE_COMERCIO_DE_GONZANAMA",
+   "ifiId": 154,
+   "ruc": "1191720624001",
+   "nombre": "COAC.  DE LA CAMARA DE COMERCIO DE GONZANAMA"
+  },
+  {
+   "archivo": "COAC___DE_LA_MICROEMPRESA_FORTUNA",
+   "ifiId": 344,
+   "ruc": "1191712249001",
+   "nombre": "COAC.  DE LA MICROEMPRESA FORTUNA"
+  },
+  {
+   "archivo": "COAC___DE_LA_PEQUENA_EMPRESA_BIBLIAN_LIMITADA",
+   "ifiId": 29,
+   "ruc": "0390027923001",
+   "nombre": "COAC.  DE LA PEQUENA EMPRESA BIBLIAN LIMITADA"
+  },
+  {
+   "archivo": "COAC___DE_LA_PEQUENA_EMPRESA_CACPE_LOJA_LTDA",
+   "ifiId": 275,
+   "ruc": "1190075539001",
+   "nombre": "COAC.  DE LA PEQUENA EMPRESA CACPE LOJA LTDA"
+  },
+  {
+   "archivo": "COAC___DE_LA_PEQUENA_EMPRESA_CACPE_YANTZAZA_LTDA",
+   "ifiId": 150,
+   "ruc": "1990007019001",
+   "nombre": "COAC.  DE LA PEQUENA EMPRESA CACPE YANTZAZA LTDA"
+  },
+  {
+   "archivo": "COAC___DE_LA_PEQUENA_EMPRESA_CACPE_ZAMORA_CHINCHIPE_LTDA_",
+   "ifiId": 146,
+   "ruc": "1990007027001",
+   "nombre": "COAC.  DE LA PEQUENA EMPRESA CACPE ZAMORA CHINCHIPE LTDA."
+  },
+  {
+   "archivo": "COAC___DE_LA_PEQUENA_EMPRESA_DE_COTOPAXI_LIMITADA",
+   "ifiId": 256,
+   "ruc": "0590052000001",
+   "nombre": "COAC.  DE LA PEQUENA EMPRESA DE COTOPAXI LIMITADA"
+  },
+  {
+   "archivo": "COAC___DE_LA_PEQUENA_EMPRESA_DE_PASTAZA_LIMITADA",
+   "ifiId": 4,
+   "ruc": "1690012606001",
+   "nombre": "COAC.  DE LA PEQUENA EMPRESA DE PASTAZA LIMITADA"
+  },
+  {
+   "archivo": "COAC___DE_LA_PEQUENA_EMPRESA_GUALAQUIZA",
+   "ifiId": 294,
+   "ruc": "1490005710001",
+   "nombre": "COAC.  DE LA PEQUENA EMPRESA GUALAQUIZA"
+  },
+  {
+   "archivo": "COAC___DE_LOS_EMPLEADOS_JUBILADOS_Y_EX_EMPLEADOS_DEL_BANCO_CENTRAL_DEL_ECUADOR",
+   "ifiId": 75,
+   "ruc": "1791375874001",
+   "nombre": "COAC.  DE LOS EMPLEADOS JUBILADOS Y EX-EMPLEADOS DEL BANCO CENTRAL DEL ECUADOR"
+  },
+  {
+   "archivo": "COAC___DE_LOS_SERVIDORES_PUBLICOS_DEL_MINISTERIO_DE_EDUCACION_Y_CULTURA",
+   "ifiId": 90,
+   "ruc": "1790979016001",
+   "nombre": "COAC.  DE LOS SERVIDORES PUBLICOS DEL MINISTERIO DE EDUCACION Y CULTURA"
+  },
+  {
+   "archivo": "COAC___DR_CORNELIO_SAENZ_VERA_LTDA",
+   "ifiId": 270,
+   "ruc": "0990320160001",
+   "nombre": "COAC.  DR CORNELIO SAENZ VERA LTDA"
+  },
+  {
+   "archivo": "COAC___ECUACREDITOS_LTDA",
+   "ifiId": 104,
+   "ruc": "1091733559001",
+   "nombre": "COAC.  ECUACREDITOS LTDA"
+  },
+  {
+   "archivo": "COAC___ECUAFUTURO_LTDA",
+   "ifiId": 55,
+   "ruc": "1891736882001",
+   "nombre": "COAC.  ECUAFUTURO LTDA"
+  },
+  {
+   "archivo": "COAC___EDUCADORES_DEL_AZUAY_LTDA",
+   "ifiId": 12,
+   "ruc": "0190021513001",
+   "nombre": "COAC.  EDUCADORES DEL AZUAY LTDA"
+  },
+  {
+   "archivo": "COAC___EDUCADORES_DE_CHIMBORAZO_LTDA",
+   "ifiId": 152,
+   "ruc": "0690002744001",
+   "nombre": "COAC.  EDUCADORES DE CHIMBORAZO LTDA"
+  },
+  {
+   "archivo": "COAC___EDUCADORES_DE_LOJA___CACEL_LTDA_",
+   "ifiId": 49,
+   "ruc": "1190036967001",
+   "nombre": "COAC.  EDUCADORES DE LOJA - CACEL LTDA."
+  },
+  {
+   "archivo": "COAC___EDUCADORES_DE_PASTAZA_LTDA",
+   "ifiId": 274,
+   "ruc": "1690000632001",
+   "nombre": "COAC.  EDUCADORES DE PASTAZA LTDA"
+  },
+  {
+   "archivo": "COAC___EDUCADORES_DE_TUNGURAHUA_LTDA",
+   "ifiId": 121,
+   "ruc": "1890049369001",
+   "nombre": "COAC.  EDUCADORES DE TUNGURAHUA LTDA"
+  },
+  {
+   "archivo": "COAC___EDUCADORES_TULCAN_LTDA",
+   "ifiId": 94,
+   "ruc": "0490007458001",
+   "nombre": "COAC.  EDUCADORES TULCAN LTDA"
+  },
+  {
+   "archivo": "COAC___EDUCADORES_Y_ASOCIADOS_ZAMORA_CHINCHIPE",
+   "ifiId": 142,
+   "ruc": "1990010028001",
+   "nombre": "COAC.  EDUCADORES Y ASOCIADOS ZAMORA CHINCHIPE"
+  },
+  {
+   "archivo": "COAC___EL_MOLINO_LIMITADA",
+   "ifiId": 70,
+   "ruc": "1792060559001",
+   "nombre": "COAC.  EL MOLINO LIMITADA"
+  },
+  {
+   "archivo": "COAC___EL_SAGRARIO_LTDA",
+   "ifiId": 82,
+   "ruc": "1890037646001",
+   "nombre": "COAC.  EL SAGRARIO LTDA"
+  },
+  {
+   "archivo": "COAC___EMPRENDEDORES_COOPEMPRENDER_LIMITADA",
+   "ifiId": 157,
+   "ruc": "1792300657001",
+   "nombre": "COAC.  EMPRENDEDORES COOPEMPRENDER LIMITADA"
+  },
+  {
+   "archivo": "COAC___ERCO_LIMITADA",
+   "ifiId": 78,
+   "ruc": "0190024733001",
+   "nombre": "COAC.  ERCO LIMITADA"
+  },
+  {
+   "archivo": "COAC___ESPERANZA_DEL_FUTURO_LTDA",
+   "ifiId": 336,
+   "ruc": "1792042518001",
+   "nombre": "COAC.  ESPERANZA DEL FUTURO LTDA"
+  },
+  {
+   "archivo": "COAC___ETAPA",
+   "ifiId": 23,
+   "ruc": "0190150739001",
+   "nombre": "COAC.  ETAPA"
+  },
+  {
+   "archivo": "COAC___FASAYNAN_LTDA",
+   "ifiId": 245,
+   "ruc": "0190316319001",
+   "nombre": "COAC.  FASAYNAN LTDA"
+  },
+  {
+   "archivo": "COAC___FERNANDO_DAQUILEMA_LIMITADA",
+   "ifiId": 158,
+   "ruc": "0691706710001",
+   "nombre": "COAC.  FERNANDO DAQUILEMA LIMITADA"
+  },
+  {
+   "archivo": "COAC___FINANCREDIT_LTDA",
+   "ifiId": 341,
+   "ruc": "1891737552001",
+   "nombre": "COAC.  FINANCREDIT LTDA"
+  },
+  {
+   "archivo": "COAC___FINANZAS_CORPORATIVAS_LTDA",
+   "ifiId": 181,
+   "ruc": "0590024937001",
+   "nombre": "COAC.  FINANZAS CORPORATIVAS LTDA"
+  },
+  {
+   "archivo": "COAC___FOCLA",
+   "ifiId": 64,
+   "ruc": "2191701227001",
+   "nombre": "COAC.  FOCLA"
+  },
+  {
+   "archivo": "COAC___FONDO_PARA_EL_DESARROLLO_Y_LA_VIDA",
+   "ifiId": 88,
+   "ruc": "1791784979001",
+   "nombre": "COAC.  FONDO PARA EL DESARROLLO Y LA VIDA"
+  },
+  {
+   "archivo": "COAC___FUTURO_LAMANENSE",
+   "ifiId": 173,
+   "ruc": "0590061123001",
+   "nombre": "COAC.  FUTURO LAMANENSE"
+  },
+  {
+   "archivo": "COAC___GANANSOL_LTDA",
+   "ifiId": 31,
+   "ruc": "0190319296001",
+   "nombre": "COAC.  GANANSOL LTDA"
+  },
+  {
+   "archivo": "COAC___GONZANAMA",
+   "ifiId": 284,
+   "ruc": "1191723062001",
+   "nombre": "COAC.  GONZANAMA"
+  },
+  {
+   "archivo": "COAC___GRUPO_DIFARE",
+   "ifiId": 97,
+   "ruc": "0992198990001",
+   "nombre": "COAC.  GRUPO DIFARE"
+  },
+  {
+   "archivo": "COAC___GUARANDA_LTDA",
+   "ifiId": 44,
+   "ruc": "0290001269001",
+   "nombre": "COAC.  GUARANDA LTDA"
+  },
+  {
+   "archivo": "COAC___HERMES_GAIBOR_VERDESOTO",
+   "ifiId": 112,
+   "ruc": "1791430956001",
+   "nombre": "COAC.  HERMES GAIBOR VERDESOTO"
+  },
+  {
+   "archivo": "COAC___HUAICANA_LTDA",
+   "ifiId": 269,
+   "ruc": "1791928083001",
+   "nombre": "COAC.  HUAICANA LTDA"
+  },
+  {
+   "archivo": "COAC___HUANCAVILCA_LTDA",
+   "ifiId": 331,
+   "ruc": "0992280700001",
+   "nombre": "COAC.  HUANCAVILCA LTDA"
+  },
+  {
+   "archivo": "COAC___ILINIZA_LTDA",
+   "ifiId": 65,
+   "ruc": "0591714031001",
+   "nombre": "COAC.  ILINIZA LTDA"
+  },
+  {
+   "archivo": "COAC___IMBABURA_IMBACOOP_LTDA",
+   "ifiId": 305,
+   "ruc": "1091716697001",
+   "nombre": "COAC.  IMBABURA IMBACOOP LTDA"
+  },
+  {
+   "archivo": "COAC___INDIGENAS_GALAPAGOS_LTDA",
+   "ifiId": 129,
+   "ruc": "2091756679001",
+   "nombre": "COAC.  INDIGENAS GALAPAGOS LTDA"
+  },
+  {
+   "archivo": "COAC___INDIGENA_SAC_LTDA",
+   "ifiId": 120,
+   "ruc": "1890142679001",
+   "nombre": "COAC.  INDIGENA SAC LTDA"
+  },
+  {
+   "archivo": "COAC___INDIGENA_SAC_PILLARO_LTDA",
+   "ifiId": 203,
+   "ruc": "1891726763001",
+   "nombre": "COAC.  INDIGENA SAC PILLARO LTDA"
+  },
+  {
+   "archivo": "COAC___INTERANDINA",
+   "ifiId": 279,
+   "ruc": "1891745571001",
+   "nombre": "COAC.  INTERANDINA"
+  },
+  {
+   "archivo": "COAC___JADAN",
+   "ifiId": 89,
+   "ruc": "0190338509001",
+   "nombre": "COAC.  JADAN"
+  },
+  {
+   "archivo": "COAC___JARDIN_AZUAYO_LIMITADA",
+   "ifiId": 48,
+   "ruc": "0190155722001",
+   "nombre": "COAC.  JARDIN AZUAYO LIMITADA"
+  },
+  {
+   "archivo": "COAC___JUAN_PIO_DE_MORA_LTDA",
+   "ifiId": 315,
+   "ruc": "0290004454001",
+   "nombre": "COAC.  JUAN PIO DE MORA LTDA"
+  },
+  {
+   "archivo": "COAC___JUVENTUD_ECUATORIANA_PROGRESISTA_LIMITADA",
+   "ifiId": 272,
+   "ruc": "0190115798001",
+   "nombre": "COAC.  JUVENTUD ECUATORIANA PROGRESISTA LIMITADA"
+  },
+  {
+   "archivo": "COAC___JUVENTUD_UNIDA_LTDA",
+   "ifiId": 276,
+   "ruc": "1891725104001",
+   "nombre": "COAC.  JUVENTUD UNIDA LTDA"
+  },
+  {
+   "archivo": "COAC___KISAPINCHA_LTDA",
+   "ifiId": 225,
+   "ruc": "1891721591001",
+   "nombre": "COAC.  KISAPINCHA LTDA"
+  },
+  {
+   "archivo": "COAC___KULLKI_WASI_LTDA",
+   "ifiId": 159,
+   "ruc": "1891710255001",
+   "nombre": "COAC.  KULLKI WASI LTDA"
+  },
+  {
+   "archivo": "COAC___LAS_NAVES_LTDA",
+   "ifiId": 127,
+   "ruc": "0290035260001",
+   "nombre": "COAC.  LAS NAVES LTDA"
+  },
+  {
+   "archivo": "COAC___LA_BENEFICA_LTDA",
+   "ifiId": 67,
+   "ruc": "1390143156001",
+   "nombre": "COAC.  LA BENEFICA LTDA"
+  },
+  {
+   "archivo": "COAC___LA_DOLOROSA_LTDA",
+   "ifiId": 303,
+   "ruc": "0990138850001",
+   "nombre": "COAC.  LA DOLOROSA LTDA"
+  },
+  {
+   "archivo": "COAC___LA_FLORESTA_LTDA",
+   "ifiId": 76,
+   "ruc": "1891714633001",
+   "nombre": "COAC.  LA FLORESTA LTDA"
+  },
+  {
+   "archivo": "COAC___LA_MERCED_LIMITADA",
+   "ifiId": 3,
+   "ruc": "0190021769001",
+   "nombre": "COAC.  LA MERCED LIMITADA"
+  },
+  {
+   "archivo": "COAC___LA_NUESTRA_LTDA",
+   "ifiId": 183,
+   "ruc": "1291731518001",
+   "nombre": "COAC.  LA NUESTRA LTDA"
+  },
+  {
+   "archivo": "COAC___LOS_ANDES_LATINOS_LTDA",
+   "ifiId": 22,
+   "ruc": "0992381760001",
+   "nombre": "COAC.  LOS ANDES LATINOS LTDA"
+  },
+  {
+   "archivo": "COAC___LUCHA_CAMPESINA",
+   "ifiId": 236,
+   "ruc": "0690075113001",
+   "nombre": "COAC.  LUCHA CAMPESINA"
+  },
+  {
+   "archivo": "COAC___LUZ_DEL_VALLE",
+   "ifiId": 323,
+   "ruc": "1791847644001",
+   "nombre": "COAC.  LUZ DEL VALLE"
+  },
+  {
+   "archivo": "COAC___MAGISTERIO_MANABITA_LIMITADA",
+   "ifiId": 231,
+   "ruc": "1390017177001",
+   "nombre": "COAC.  MAGISTERIO MANABITA LIMITADA"
+  },
+  {
+   "archivo": "COAC___MANANTIAL_DE_ORO_LTDA",
+   "ifiId": 107,
+   "ruc": "1792076773001",
+   "nombre": "COAC.  MANANTIAL DE ORO LTDA"
+  },
+  {
+   "archivo": "COAC___MAQUITA_CUSHUNCHIC_LTDA",
+   "ifiId": 299,
+   "ruc": "1791379470001",
+   "nombre": "COAC.  MAQUITA CUSHUNCHIC LTDA"
+  },
+  {
+   "archivo": "COAC___MAQUITA_CUSHUN_LTDA",
+   "ifiId": 198,
+   "ruc": "1891708358001",
+   "nombre": "COAC.  MAQUITA CUSHUN LTDA"
+  },
+  {
+   "archivo": "COAC___MARCABELI_LTDA",
+   "ifiId": 320,
+   "ruc": "0791704499001",
+   "nombre": "COAC.  MARCABELI LTDA"
+  },
+  {
+   "archivo": "COAC___METROPOLIS_LTDA",
+   "ifiId": 172,
+   "ruc": "0992470550001",
+   "nombre": "COAC.  METROPOLIS LTDA"
+  },
+  {
+   "archivo": "COAC___METROPOLITANA_LTDA",
+   "ifiId": 26,
+   "ruc": "0990872562001",
+   "nombre": "COAC.  METROPOLITANA LTDA"
+  },
+  {
+   "archivo": "COAC___MICROEMPRESARIAL_SUCRE",
+   "ifiId": 286,
+   "ruc": "1391707363001",
+   "nombre": "COAC.  MICROEMPRESARIAL SUCRE"
+  },
+  {
+   "archivo": "COAC___MIGRANTES_DEL_ECUADOR_LTDA",
+   "ifiId": 233,
+   "ruc": "1891734650001",
+   "nombre": "COAC.  MIGRANTES DEL ECUADOR LTDA"
+  },
+  {
+   "archivo": "COAC___MINGA_LTDA",
+   "ifiId": 229,
+   "ruc": "0690074761001",
+   "nombre": "COAC.  MINGA LTDA"
+  },
+  {
+   "archivo": "COAC___MUJERES_UNIDAS_TANTANAKUSHKA_WARMIKUNAPAC",
+   "ifiId": 219,
+   "ruc": "1091712284001",
+   "nombre": "COAC.  MUJERES UNIDAS TANTANAKUSHKA WARMIKUNAPAC"
+  },
+  {
+   "archivo": "COAC___MULTIEMPRESARIAL",
+   "ifiId": 339,
+   "ruc": "0190160459001",
+   "nombre": "COAC.  MULTIEMPRESARIAL"
+  },
+  {
+   "archivo": "COAC___MUSHUC_RUNA_LTDA",
+   "ifiId": 249,
+   "ruc": "1890141877001",
+   "nombre": "COAC.  MUSHUC RUNA LTDA"
+  },
+  {
+   "archivo": "COAC___NEGOCIOS_ANDINOS_LTDA",
+   "ifiId": 321,
+   "ruc": "1792311667001",
+   "nombre": "COAC.  NEGOCIOS ANDINOS LTDA"
+  },
+  {
+   "archivo": "COAC___NUEVA_ESPERANZA_LTDA",
+   "ifiId": 340,
+   "ruc": "0691720721001",
+   "nombre": "COAC.  NUEVA ESPERANZA LTDA"
+  },
+  {
+   "archivo": "COAC___OCCIDENTAL",
+   "ifiId": 137,
+   "ruc": "0591724444001",
+   "nombre": "COAC.  OCCIDENTAL"
+  },
+  {
+   "archivo": "COAC___ONCE_DE_JUNIO_LTDA",
+   "ifiId": 14,
+   "ruc": "0790015002001",
+   "nombre": "COAC.  ONCE DE JUNIO LTDA"
+  },
+  {
+   "archivo": "COAC___ORDEN_Y_SEGURIDAD__OYS_",
+   "ifiId": 262,
+   "ruc": "1792253411001",
+   "nombre": "COAC.  ORDEN Y SEGURIDAD \"OYS\""
+  },
+  {
+   "archivo": "COAC___OSCUS_LIMITADA",
+   "ifiId": 92,
+   "ruc": "1890001323001",
+   "nombre": "COAC.  OSCUS LIMITADA"
+  },
+  {
+   "archivo": "COAC___PABLO_MUNOZ_VEGA_LIMITADA",
+   "ifiId": 168,
+   "ruc": "0490001883001",
+   "nombre": "COAC.  PABLO MUNOZ VEGA LIMITADA"
+  },
+  {
+   "archivo": "COAC___PADRE_JULIAN_LORENTE_LTDA",
+   "ifiId": 17,
+   "ruc": "1190015110001",
+   "nombre": "COAC.  PADRE JULIAN LORENTE LTDA"
+  },
+  {
+   "archivo": "COAC___PEDRO_MONCAYO_LTDA",
+   "ifiId": 292,
+   "ruc": "1790892670001",
+   "nombre": "COAC.  PEDRO MONCAYO LTDA"
+  },
+  {
+   "archivo": "COAC___PICHINCHA_LTDA",
+   "ifiId": 235,
+   "ruc": "1792057043001",
+   "nombre": "COAC.  PICHINCHA LTDA"
+  },
+  {
+   "archivo": "COAC___PILAHUIN_TIO_LIMITADA",
+   "ifiId": 329,
+   "ruc": "1091720902001",
+   "nombre": "COAC.  PILAHUIN TIO LIMITADA"
+  },
+  {
+   "archivo": "COAC___POLICIA_NACIONAL_LIMITADA",
+   "ifiId": 251,
+   "ruc": "1790866084001",
+   "nombre": "COAC.  POLICIA NACIONAL LIMITADA"
+  },
+  {
+   "archivo": "COAC___POLITECNICA_LTDA",
+   "ifiId": 63,
+   "ruc": "1790641392001",
+   "nombre": "COAC.  POLITECNICA LTDA"
+  },
+  {
+   "archivo": "COAC___PREVISION_AHORRO_Y_DESAROLLO_LTDA",
+   "ifiId": 209,
+   "ruc": "1791280156001",
+   "nombre": "COAC.  PREVISION AHORRO Y DESAROLLO LTDA"
+  },
+  {
+   "archivo": "COAC___PRODUCCION_AHORRO_INVERSION_SERVICIO_PAIS_LTDA",
+   "ifiId": 176,
+   "ruc": "1891739113001",
+   "nombre": "COAC.  PRODUCCION AHORRO INVERSION SERVICIO PAIS LTDA"
+  },
+  {
+   "archivo": "COAC___PROVIDA_LTDA",
+   "ifiId": 330,
+   "ruc": "0190327949001",
+   "nombre": "COAC.  PROVIDA LTDA"
+  },
+  {
+   "archivo": "COAC___PUCARA_LTDA",
+   "ifiId": 278,
+   "ruc": "0591714821001",
+   "nombre": "COAC.  PUCARA LTDA"
+  },
+  {
+   "archivo": "COAC___PUELLARO_LTDA",
+   "ifiId": 313,
+   "ruc": "1790890864001",
+   "nombre": "COAC.  PUELLARO LTDA"
+  },
+  {
+   "archivo": "COAC___PUJILI_LTDA",
+   "ifiId": 257,
+   "ruc": "0591713760001",
+   "nombre": "COAC.  PUJILI LTDA"
+  },
+  {
+   "archivo": "COAC___PUSHAK_RUNA_LTDA",
+   "ifiId": 33,
+   "ruc": "1891737439001",
+   "nombre": "COAC.  PUSHAK RUNA LTDA"
+  },
+  {
+   "archivo": "COAC___RHUMY_WARA",
+   "ifiId": 316,
+   "ruc": "1891742319001",
+   "nombre": "COAC.  RHUMY WARA"
+  },
+  {
+   "archivo": "COAC___RIOBAMBA_LTDA",
+   "ifiId": 115,
+   "ruc": "0690045389001",
+   "nombre": "COAC.  RIOBAMBA LTDA"
+  },
+  {
+   "archivo": "COAC___RURAL_SIERRA_NORTE",
+   "ifiId": 98,
+   "ruc": "1091761439001",
+   "nombre": "COAC.  RURAL SIERRA NORTE"
+  },
+  {
+   "archivo": "COAC___SALINAS_LIMITADA",
+   "ifiId": 144,
+   "ruc": "0290034337001",
+   "nombre": "COAC.  SALINAS LIMITADA"
+  },
+  {
+   "archivo": "COAC___SALITRE_LTDA",
+   "ifiId": 93,
+   "ruc": "0990858527001",
+   "nombre": "COAC.  SALITRE LTDA"
+  },
+  {
+   "archivo": "COAC___SANTA_ANA_LTDA",
+   "ifiId": 160,
+   "ruc": "1390091474001",
+   "nombre": "COAC.  SANTA ANA LTDA"
+  },
+  {
+   "archivo": "COAC___SANTA_ANITA_LTDA",
+   "ifiId": 8,
+   "ruc": "1091708139001",
+   "nombre": "COAC.  SANTA ANITA LTDA"
+  },
+  {
+   "archivo": "COAC___SANTA_ISABEL_LTDA",
+   "ifiId": 312,
+   "ruc": "0190160378001",
+   "nombre": "COAC.  SANTA ISABEL LTDA"
+  },
+  {
+   "archivo": "COAC___SANTA_ROSA_LIMITADA",
+   "ifiId": 50,
+   "ruc": "0790024656001",
+   "nombre": "COAC.  SANTA ROSA LIMITADA"
+  },
+  {
+   "archivo": "COAC___SAN_ANTONIO_LTDA_LOS_RIOS",
+   "ifiId": 268,
+   "ruc": "1290068068001",
+   "nombre": "COAC.  SAN ANTONIO LTDA LOS RIOS"
+  },
+  {
+   "archivo": "COAC___SAN_ANTONIO_LTDA___IMBABURA",
+   "ifiId": 191,
+   "ruc": "1090046892001",
+   "nombre": "COAC.  SAN ANTONIO LTDA - IMBABURA"
+  },
+  {
+   "archivo": "COAC___SAN_CRISTOBAL_LTDA",
+   "ifiId": 237,
+   "ruc": "1790100294001",
+   "nombre": "COAC.  SAN CRISTOBAL LTDA"
+  },
+  {
+   "archivo": "COAC___SAN_FRANCISCO_DE_ASIS_LTDA",
+   "ifiId": 244,
+   "ruc": "1790045668001",
+   "nombre": "COAC.  SAN FRANCISCO DE ASIS LTDA"
+  },
+  {
+   "archivo": "COAC___SAN_FRANCISCO_LTDA",
+   "ifiId": 41,
+   "ruc": "1890003628001",
+   "nombre": "COAC.  SAN FRANCISCO LTDA"
+  },
+  {
+   "archivo": "COAC___SAN_GABRIEL_LTDA",
+   "ifiId": 32,
+   "ruc": "0490009124001",
+   "nombre": "COAC.  SAN GABRIEL LTDA"
+  },
+  {
+   "archivo": "COAC___SAN_JORGE_LTDA",
+   "ifiId": 9,
+   "ruc": "0690069334001",
+   "nombre": "COAC.  SAN JORGE LTDA"
+  },
+  {
+   "archivo": "COAC___SAN_JOSE_LIMITADA",
+   "ifiId": 214,
+   "ruc": "0290003288001",
+   "nombre": "COAC.  SAN JOSE LIMITADA"
+  },
+  {
+   "archivo": "COAC___SAN_JUAN_DE_COTOGCHOA",
+   "ifiId": 204,
+   "ruc": "1790894053001",
+   "nombre": "COAC.  SAN JUAN DE COTOGCHOA"
+  },
+  {
+   "archivo": "COAC___SAN_MARCOS",
+   "ifiId": 62,
+   "ruc": "0391008558001",
+   "nombre": "COAC.  SAN MARCOS"
+  },
+  {
+   "archivo": "COAC___SAN_MARTIN_DE_TISALEO_LTDA",
+   "ifiId": 57,
+   "ruc": "1891716385001",
+   "nombre": "COAC.  SAN MARTIN DE TISALEO LTDA"
+  },
+  {
+   "archivo": "COAC___SAN_MIGUEL_DE_LOS_BANCOS_LTDA",
+   "ifiId": 124,
+   "ruc": "1791367359001",
+   "nombre": "COAC.  SAN MIGUEL DE LOS BANCOS LTDA"
+  },
+  {
+   "archivo": "COAC___SAN_MIGUEL_DE_PALLATANGA",
+   "ifiId": 153,
+   "ruc": "0690074397001",
+   "nombre": "COAC.  SAN MIGUEL DE PALLATANGA"
+  },
+  {
+   "archivo": "COAC___SAN_MIGUEL_DE_SIGCHOS",
+   "ifiId": 188,
+   "ruc": "0590060437001",
+   "nombre": "COAC.  SAN MIGUEL DE SIGCHOS"
+  },
+  {
+   "archivo": "COAC___SAN_MIGUEL_LTDA",
+   "ifiId": 134,
+   "ruc": "0290003180001",
+   "nombre": "COAC.  SAN MIGUEL LTDA"
+  },
+  {
+   "archivo": "COAC___SAN_PEDRO_LTDA",
+   "ifiId": 318,
+   "ruc": "0290030099001",
+   "nombre": "COAC.  SAN PEDRO LTDA"
+  },
+  {
+   "archivo": "COAC___SARAGUROS",
+   "ifiId": 325,
+   "ruc": "1191736423001",
+   "nombre": "COAC.  SARAGUROS"
+  },
+  {
+   "archivo": "COAC___SENOR_DE_GIRON",
+   "ifiId": 141,
+   "ruc": "0190317625001",
+   "nombre": "COAC.  SENOR DE GIRON"
+  },
+  {
+   "archivo": "COAC___SIDETAMC",
+   "ifiId": 37,
+   "ruc": "0190096076001",
+   "nombre": "COAC.  SIDETAMC"
+  },
+  {
+   "archivo": "COAC___SIERRA_CENTRO_LTDA",
+   "ifiId": 296,
+   "ruc": "0591719009001",
+   "nombre": "COAC.  SIERRA CENTRO LTDA"
+  },
+  {
+   "archivo": "COAC___SIMIATUG_LIMITADA",
+   "ifiId": 54,
+   "ruc": "0291500994001",
+   "nombre": "COAC.  SIMIATUG LIMITADA"
+  },
+  {
+   "archivo": "COAC___SISA",
+   "ifiId": 108,
+   "ruc": "1891744214001",
+   "nombre": "COAC.  SISA"
+  },
+  {
+   "archivo": "COAC___SOLIDARIDAD__EMPRENDIMIENTO_Y_COOPERACION",
+   "ifiId": 177,
+   "ruc": "0190147665001",
+   "nombre": "COAC.  SOLIDARIDAD, EMPRENDIMIENTO Y COOPERACION"
+  },
+  {
+   "archivo": "COAC___SOL_DE_LOS_ANDES_LTDA_CHIMBORAZO",
+   "ifiId": 328,
+   "ruc": "0691732584001",
+   "nombre": "COAC.  SOL DE LOS ANDES LTDA CHIMBORAZO"
+  },
+  {
+   "archivo": "COAC___SUMAC_LLACTA_LTDA",
+   "ifiId": 83,
+   "ruc": "0690042495001",
+   "nombre": "COAC.  SUMAC LLACTA LTDA"
+  },
+  {
+   "archivo": "COAC___SUMAK_KAWSAY_LTDA",
+   "ifiId": 228,
+   "ruc": "0591711563001",
+   "nombre": "COAC.  SUMAK KAWSAY LTDA"
+  },
+  {
+   "archivo": "COAC___SUMAK_SAMY_LTDA",
+   "ifiId": 250,
+   "ruc": "1891725910001",
+   "nombre": "COAC.  SUMAK SAMY LTDA"
+  },
+  {
+   "archivo": "COAC___TENA_LTDA",
+   "ifiId": 149,
+   "ruc": "1590001585001",
+   "nombre": "COAC.  TENA LTDA"
+  },
+  {
+   "archivo": "COAC___TEXTIL_14_DE_MARZO",
+   "ifiId": 234,
+   "ruc": "1791268628001",
+   "nombre": "COAC.  TEXTIL 14 DE MARZO"
+  },
+  {
+   "archivo": "COAC___TULCAN_LIMITADA",
+   "ifiId": 53,
+   "ruc": "0490002669001",
+   "nombre": "COAC.  TULCAN LIMITADA"
+  },
+  {
+   "archivo": "COAC___UNIBLOCK_Y_SERVICIOS_LTDA",
+   "ifiId": 342,
+   "ruc": "0591714236001",
+   "nombre": "COAC.  UNIBLOCK Y SERVICIOS LTDA"
+  },
+  {
+   "archivo": "COAC___UNIDAD_Y_PROGRESO",
+   "ifiId": 213,
+   "ruc": "1791422708001",
+   "nombre": "COAC.  UNIDAD Y PROGRESO"
+  },
+  {
+   "archivo": "COAC___UNION_EL_EJIDO",
+   "ifiId": 300,
+   "ruc": "1090058521001",
+   "nombre": "COAC.  UNION EL EJIDO"
+  },
+  {
+   "archivo": "COAC___UNIOTAVALO_LTDA",
+   "ifiId": 165,
+   "ruc": "1091728148001",
+   "nombre": "COAC.  UNIOTAVALO LTDA"
+  },
+  {
+   "archivo": "COAC___UNIVERSIDAD_CATOLICA_DEL_ECUADOR",
+   "ifiId": 91,
+   "ruc": "1791708288001",
+   "nombre": "COAC.  UNIVERSIDAD CATOLICA DEL ECUADOR"
+  },
+  {
+   "archivo": "COAC___VENCEDORES_LTDA",
+   "ifiId": 155,
+   "ruc": "1891710581001",
+   "nombre": "COAC.  VENCEDORES LTDA"
+  },
+  {
+   "archivo": "COAC___VICENTINA_MANUEL_ESTEBAN_GODOY_ORTEGA_LIMITADA",
+   "ifiId": 282,
+   "ruc": "1190068389001",
+   "nombre": "COAC.  VICENTINA MANUEL ESTEBAN GODOY ORTEGA LIMITADA"
+  },
+  {
+   "archivo": "COAC___VILCABAMBA_CACVIL",
+   "ifiId": 167,
+   "ruc": "1191736954001",
+   "nombre": "COAC.  VILCABAMBA CACVIL"
+  },
+  {
+   "archivo": "COAC___VIRGEN_DEL_CISNE",
+   "ifiId": 334,
+   "ruc": "0591711164001",
+   "nombre": "COAC.  VIRGEN DEL CISNE"
+  },
+  {
+   "archivo": "COAC___VISION_DE_LOS_ANDES_VIS_ANDES",
+   "ifiId": 102,
+   "ruc": "0591719718001",
+   "nombre": "COAC.  VISION DE LOS ANDES VIS ANDES"
+  },
+  {
+   "archivo": "COAC___YUYAY_LTDA",
+   "ifiId": 180,
+   "ruc": "0391005664001",
+   "nombre": "COAC.  YUYAY LTDA"
+  },
+  {
+   "archivo": "MUT___AMBATO",
+   "ifiId": 105,
+   "ruc": "1890012015001",
+   "nombre": "MUT.  AMBATO"
+  },
+  {
+   "archivo": "MUT___AZUAY",
+   "ifiId": 307,
+   "ruc": "0190006247001",
+   "nombre": "MUT.  AZUAY"
+  },
+  {
+   "archivo": "MUT___IMBABURA",
+   "ifiId": 16,
+   "ruc": "1090056286001",
+   "nombre": "MUT.  IMBABURA"
+  },
+  {
+   "archivo": "MUT___PICHINCHA",
+   "ifiId": 202,
+   "ruc": "1790075494001",
+   "nombre": "MUT.  PICHINCHA"
+  }
+ ]
+}
