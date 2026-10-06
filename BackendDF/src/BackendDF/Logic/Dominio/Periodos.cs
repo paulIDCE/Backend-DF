@@ -106,6 +106,17 @@ namespace BackendDF.Logic.Dominio
             return [.. union];
         }
 
+        /// <summary>Todos los meses <c>YYYY-MM</c> de <paramref name="desde"/> a <paramref name="hasta"/>, inclusive.</summary>
+        public static string[] Meses(string desde, string hasta)
+        {
+            var inicio = DateTime.ParseExact(desde + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var fin = DateTime.ParseExact(hasta + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var meses = new List<string>();
+            for (var f = inicio; f <= fin; f = f.AddMonths(1))
+                meses.Add(f.ToString("yyyy-MM", CultureInfo.InvariantCulture));
+            return [.. meses];
+        }
+
         /// <summary><c>YYYY-MM</c> menos N meses.</summary>
         public static string RestarMeses(string mensual, int meses)
         {

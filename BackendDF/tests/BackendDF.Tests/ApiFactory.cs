@@ -26,6 +26,9 @@ namespace BackendDF.Tests
             builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["Datos:RutaBase"] = RutaDatos(),
+                // Las pruebas de contrato validan la fuente JSON pura; la híbrida tiene las suyas
+                // (FuenteHibridaTests con dobles y SqlIntegracionTests contra la BD).
+                ["Datos:Sql:Habilitado"] = "false",
                 ["Auth:Habilitada"] = "true",
                 ["Auth:Issuer"] = Issuer,
                 ["Auth:Audience"] = Audience,
@@ -57,6 +60,10 @@ namespace BackendDF.Tests
         /// <summary>Busca <c>src/BackendDF/Database</c> subiendo desde la carpeta de salida de los tests.</summary>
         public static string RutaDatos()
         {
+            // Permite compilar los tests fuera del árbol del repo (p. ej. --artifacts-path).
+            if (Environment.GetEnvironmentVariable("BACKENDDF_RUTA_DATOS") is { Length: > 0 } ruta && Directory.Exists(ruta))
+                return ruta;
+
             for (var dir = new DirectoryInfo(AppContext.BaseDirectory); dir is not null; dir = dir.Parent)
             {
                 var candidato = Path.Combine(dir.FullName, "src", "BackendDF", "Database");

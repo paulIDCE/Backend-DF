@@ -20,6 +20,14 @@
 
     <!-- Swagger / OpenAPI -->
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+
+    <!-- Fuente SQL (idce_bco_coop): ADO.NET sobre los procedimientos del esquema api -->
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Mapa slug del backend → IFIID/RUC de la BD (vive en el backend, no en la BD). -->
+    <Content Update="Data\FuenteSql\mapa-entidades.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

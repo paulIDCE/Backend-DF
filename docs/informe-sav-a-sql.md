@@ -457,6 +457,32 @@ Hasta que exista `B11Agregado` (paso 5 de §7.2), `sp_Saldos_Agregado` agrega en
 ### 8.6 Estado final (cuando todo esté en SQL)
 Mismos SPs 1:1 con `IFuenteDatos` que proponía v1 (`sp_Entidades_Listar`, `sp_Cuadros_Listar`, `sp_Filas_Obtener`, `sp_Filas_Sistema`, `sp_Notas`, `sp_Reporte_Entidad`, `sp_Reportes_Todos`, `sp_Info_Fuentes`), con la plantilla de cuadros en el backend (un recurso versionado con el código, extraído una vez de los JSON) y `mapa-entidades.json` para los ids. En ese punto los archivos de datos JSON se retiran; quedan solo los recursos de presentación.
 
+### 8.7 Estado de la implementación
+
+**Fase 0 — BD.** Está instalada en `idce_bco_coop`. Scripts en [`db/fase0/`](../db/fase0/README.md):
+- Esquema `api` y rol `api_lectura`.
+- Índices `IX_B11_IFIID_Cuenta_Fecha`, `IX_IndicadorData_IFIID` y `UX_Ifi_Ruc`.
+- Vista indexada `api.vSaldoAgregado` y vista `api.vVentana`.
+- 7 procedimientos: `api.ObtenerVentana`, `ListarIfi`, `ListarCuentas`, `ObtenerSaldosEntidad`, `ObtenerSaldosEntidades`, `ObtenerSaldosAgregado`, `ObtenerIndicadoresEntidad`. Los nombres finales no llevan el prefijo `sp_`.
+
+**Fase 1 — backend.** Se activa con `Datos:Sql:Habilitado` y la cadena `ConnectionStrings:DefaultConnection`.
+
+| Pieza | Archivo |
+|---|---|
+| Capa repository, un método por SP | `Data/Repositorios/IBcoCoopRepositorio.cs`, `BcoCoopRepositorioSql.cs`, `ModelosBd.cs` |
+| Mapa slug → IFIID/RUC, validado contra `api.ListarIfi` | `Data/FuenteSql/MapaEntidades.cs` + `mapa-entidades.json` |
+| Sector → tipos/segmentos (C3) | `Data/FuenteSql/FiltrosSistema.cs` |
+| Ventana (C1), grupos omitidos (C2), qué fila sale de SQL, escalas | `Data/FuenteSql/ReglasCuadro.cs` |
+| Fuente híbrida: overlay, ventana, cachés por firma, circuito y fallback a JSON | `Data/FuenteHibrida/FuenteDatosHibrida.cs` |
+| Precarga del índice de reportes al arrancar | `Data/FuenteHibrida/PrecargaHibridaHostedService.cs` |
+| Health: Degraded si SQL cae | `Common/Utils/FuenteDatosHealthCheck.cs` |
+
+**Pruebas:**
+- `FuenteHibridaTests`: unitarias con dobles.
+- `SqlIntegracionTests`: contra la BD real; se omiten si no hay conexión.
+- Las de contrato existentes siguen usando solo JSON.
+- Resultado: 72/72 en verde.
+
 ---
 
 ## 9. Validación de paridad (el JSON como oráculo)

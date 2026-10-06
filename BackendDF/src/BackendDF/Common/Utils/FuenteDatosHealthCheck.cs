@@ -1,3 +1,4 @@
+using BackendDF.Data.FuenteHibrida;
 using BackendDF.Data.Interfaces;
 using BackendDF.Models.Entities;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -20,6 +21,9 @@ namespace BackendDF.Common.Utils
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default) =>
             Task.FromResult(_fuente.Estado switch
             {
+                // Fuente híbrida con SQL caído: la API responde con los JSON (Degraded, no Unhealthy).
+                EstadoFuente.Lista when _fuente is FuenteDatosHibrida { SqlNoDisponible: true } hibrida =>
+                    HealthCheckResult.Degraded($"Datos JSON cargados; la base SQL no está disponible ({hibrida.UltimoErrorSql})."),
                 EstadoFuente.Lista => HealthCheckResult.Healthy("Datos base e índice de reportes cargados."),
                 EstadoFuente.IndexandoReportes => HealthCheckResult.Degraded("Datos base cargados; construyendo el índice de reportes."),
                 EstadoFuente.Cargando => HealthCheckResult.Degraded("Cargando los datos base."),
