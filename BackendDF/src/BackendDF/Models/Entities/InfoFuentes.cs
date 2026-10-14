@@ -34,5 +34,11 @@ namespace BackendDF.Models.Entities
         public IReadOnlyList<InfoFuente> Fuentes { get; init; } = [];
         public string? UltimoCorteComun { get; init; }
         public IReadOnlyList<string> Advertencias { get; init; } = [];
+
+        /// <summary>Cuadros por fuente de sus datos; null si no se puede saber (catálogo sin conteos).</summary>
+        public CuadrosPorOrigen? CuadrosPorOrigen { get; init; }
     }
+
+    /// <summary>Cuántos cuadros salen solo de la BD, solo del JSON o de ambas.</summary>
+    public sealed record CuadrosPorOrigen(int Bd, int Json, int Mixto);
 }

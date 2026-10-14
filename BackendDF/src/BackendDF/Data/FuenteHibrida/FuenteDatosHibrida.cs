@@ -12,10 +12,15 @@ using BackendDF.Models.Entities;
 namespace BackendDF.Data.FuenteHibrida
 {
     /// <summary>
-    /// <see cref="IFuenteDatos"/> híbrida (informe §8): la plantilla de cada cuadro (orden,
-    /// títulos, jerarquía) sale siempre de la fuente JSON; los valores de las filas de cuenta y de
-    /// los indicadores de <c>IndicadorData</c> salen de <c>idce_bco_coop</c> vía
-    /// <see cref="IBcoCoopRepositorio"/>; el resto, del JSON.
+    /// <see cref="IFuenteDatos"/> híbrida (informe §8) sobre <c>idce_bco_coop</c> vía
+    /// <see cref="IBcoCoopRepositorio"/>:
+    /// <list type="bullet">
+    /// <item><b>Fase 2</b> (cuadros del catálogo <c>dbo.Cuadro</c>): orden, texto, jerarquía y
+    /// cálculos salen de la BD (<see cref="ArmadorCatalogo"/>); el JSON solo aporta el valor de las
+    /// filas aún pendientes (Calculo = JSON).</item>
+    /// <item><b>Fase 1</b> (sin catálogo: macro, catálogo no instalado o SQL caído al armarlo): la
+    /// plantilla sale del JSON y las filas de cuenta e indicadores toman su valor de SQL.</item>
+    /// </list>
     ///
     /// Convenciones: C1 recorta lo que deriva del .sav a la ventana de la BD (los macro y lo
     /// externo conservan sus fechas); C2 oculta las cuentas de los grupos 6/7; C3 agrega los
@@ -29,6 +34,7 @@ namespace BackendDF.Data.FuenteHibrida
     public sealed class FuenteDatosHibrida : IFuenteDatos
     {
         private const string NombreFuenteSql = "sql-bco_coop";
+        private const string NombreFuenteCatalogo = "catalogo-cuadros";
 
         private static readonly string[] AdvertenciasConvenciones =
         [
@@ -121,27 +127,40 @@ namespace BackendDF.Data.FuenteHibrida
             if (ctx is null)
                 return cuadros;
 
-            return ctx.Cuadros ??= cuadros.Select(c => !_reglas.UsaVentana(c.Tipo, c.Id) ? c : new CuadroFuente
+            // Título, unidad y fechas de los cuadros del catálogo salen de la BD; el resto (macro),
+            // del JSON con la regla de ventana de Fase 1. Tipo, origen y frecuencia no cambian.
+            return ctx.Cuadros ??= cuadros.Select(c =>
             {
-                Id = c.Id,
-                Titulo = c.Titulo,
-                Unidad = c.Unidad,
-                Origen = c.Origen,
-                Tipo = c.Tipo,
-                Frecuencia = c.Frecuencia,
-                PeriodoDesde = ctx.Ventana.Desde,
-                PeriodoHasta = ctx.Ventana.Hasta
+                var enCatalogo = ctx.Catalogo.TryGetValue(c.Id, out var def);
+                var conVentana = enCatalogo ? !def!.FechasJson : _reglas.UsaVentana(c.Tipo, c.Id);
+                if (!enCatalogo && !conVentana)
+                    return c;
+                return new CuadroFuente
+                {
+                    Id = c.Id,
+                    Titulo = def?.Titulo ?? c.Titulo,
+                    Unidad = enCatalogo ? def!.Unidad : c.Unidad,
+                    Origen = c.Origen,
+                    Tipo = c.Tipo,
+                    Frecuencia = c.Frecuencia,
+                    PeriodoDesde = conVentana ? ctx.Ventana.Desde : c.PeriodoDesde,
+                    PeriodoHasta = conVentana ? ctx.Ventana.Hasta : c.PeriodoHasta
+                };
             }).ToList();
         }
 
         public async Task<IReadOnlyList<FilaDatos>> ObtenerFilasAsync(ConsultaFilas consulta, CancellationToken ct)
         {
             var filas = await _json.ObtenerFilasAsync(consulta, ct);
-            if (!_reglas.UsaVentana(consulta.Tipo, consulta.Cuadro))
-                return filas;
-
             var ctx = await ObtenerContextoAsync(ct);
-            if (ctx is null)
+
+            // Fase 2: el cuadro está en el catálogo de la BD → plantilla y cálculos desde SQL.
+            if (ctx is not null && ctx.Catalogo.TryGetValue(consulta.Cuadro, out var cuadro)
+                && await CuadroCalculadoAsync(ctx, cuadro, consulta.EntidadId, consulta.Filtro, consulta.Id) is { } calculado)
+                return ArmadorCatalogo.Filas(cuadro, calculado, filas, cuadro.FechasJson ? null : ctx.Eje, consulta.Filtro);
+
+            // Fase 1: plantilla JSON con valores de cuenta desde SQL.
+            if (!_reglas.UsaVentana(consulta.Tipo, consulta.Cuadro) || ctx is null)
                 return filas;
 
             SeriesBd? saldos = null, indicadores = null;
@@ -172,8 +191,33 @@ namespace BackendDF.Data.FuenteHibrida
             if (ctx is null)
                 return filas;
 
-            var saldos = filas.Any(f => _reglas.UsaSql(f.Cuadro)) ? await SaldosSectorAsync(ctx, filtro) : null;
-            return Combinar(filas, ctx.Eje, saldos, null);
+            // Cuadro por cuadro, en el orden del archivo: los del catálogo se arman desde la BD y el
+            // resto sigue la ruta de Fase 1 (los saldos del sector se piden una sola vez).
+            var salida = new List<FilaDatos>(filas.Count);
+            SeriesBd? saldos = null;
+            var saldosPedidos = false;
+            foreach (var grupo in filas.GroupBy(f => f.Cuadro))
+            {
+                var delCuadro = grupo.ToList();
+                if (ctx.Catalogo.TryGetValue(grupo.Key, out var cuadro)
+                    && await CuadroCalculadoAsync(ctx, cuadro, null, filtro, null) is { } calculado)
+                {
+                    salida.AddRange(ArmadorCatalogo.Filas(cuadro, calculado, delCuadro, cuadro.FechasJson ? null : ctx.Eje, filtro));
+                    continue;
+                }
+                if (!_reglas.UsaVentana(TipoCuadro.Sistema, grupo.Key))
+                {
+                    salida.AddRange(delCuadro);   // no sale del .sav: fechas del JSON (C1)
+                    continue;
+                }
+                if (!saldosPedidos && delCuadro.Any(f => _reglas.UsaSql(f.Cuadro)))
+                {
+                    saldos = await SaldosSectorAsync(ctx, filtro);
+                    saldosPedidos = true;
+                }
+                salida.AddRange(Combinar(delCuadro, ctx.Eje, saldos, null));
+            }
+            return salida;
         }
 
         public Task<IReadOnlyList<string>> ObtenerNotasAsync(string cuadro, CancellationToken ct) =>
@@ -192,6 +236,11 @@ namespace BackendDF.Data.FuenteHibrida
             // Si el índice de todas las entidades ya está armado, se reutiliza.
             if (ctx.Reportes is { IsCompletedSuccessfully: true } listos && listos.Result.TryGetValue(reporte.EntidadId, out var armado))
                 return armado;
+
+            // Fase 2: REP01 desde el catálogo (orden, texto y cálculos de la BD).
+            if (ctx.Catalogo.TryGetValue("REP01", out var rep01)
+                && await CuadroCalculadoAsync(ctx, rep01, reporte.EntidadId, null, null) is { } calculado)
+                return ArmadorCatalogo.Reporte(reporte.EntidadId, calculado.Filas, calculado.Valores, reporte, ctx.Eje);
 
             SeriesBd? saldos = null;
             if (_reglas.UsaSql("REP01") && ctx.Ids.TryGetValue(reporte.EntidadId, out var ifiId))
@@ -226,6 +275,8 @@ namespace BackendDF.Data.FuenteHibrida
             {
                 advertencias.AddRange(AdvertenciasConvenciones);
                 advertencias.AddRange(ctx.AdvertenciasMapa);
+                if (ctx.AvisoCatalogo is not null)
+                    advertencias.Add(ctx.AvisoCatalogo);
                 fuentes.Add(new InfoFuente
                 {
                     Fuente = NombreFuenteSql,
@@ -235,6 +286,14 @@ namespace BackendDF.Data.FuenteHibrida
                     Hasta = ctx.Ventana.Hasta,
                     Modificado = ctx.Version
                 });
+                if (ctx.Catalogo.Count > 0)
+                    fuentes.Add(new InfoFuente
+                    {
+                        Fuente = NombreFuenteCatalogo,
+                        Archivo = "idce_bco_coop.dbo.Cuadro",
+                        Archivos = ctx.Catalogo.Count,
+                        Modificado = ctx.Version
+                    });
             }
             if (SqlNoDisponible || ctx is null)
                 advertencias.Add($"La base SQL no está disponible ({_ultimoErrorSql ?? "sin conexión"}); se sirven solo los datos JSON.");
@@ -244,27 +303,59 @@ namespace BackendDF.Data.FuenteHibrida
                 VersionDatos = ctx is not null && ctx.Version > info.VersionDatos ? ctx.Version : info.VersionDatos,
                 Fuentes = fuentes,
                 UltimoCorteComun = ctx?.Ventana.Hasta ?? info.UltimoCorteComun,
-                Advertencias = advertencias
+                Advertencias = advertencias,
+                CuadrosPorOrigen = await CuadrosPorOrigenAsync(ctx, advertencias, ct)
             };
+        }
+
+        /// <summary>
+        /// Cuadros por fuente de sus datos: los del catálogo según sus filas (con fórmula / pendientes),
+        /// el resto (macro) del JSON. Sin SQL, todo JSON. null si el catálogo no informa los conteos.
+        /// </summary>
+        private async Task<CuadrosPorOrigen?> CuadrosPorOrigenAsync(Contexto? ctx, List<string> advertencias, CancellationToken ct)
+        {
+            var cuadros = await _json.ObtenerCuadrosAsync(ct);
+            if (ctx is null || SqlNoDisponible)
+                return new CuadrosPorOrigen(0, cuadros.Count, 0);
+            if (ctx.Catalogo.Count == 0)
+                return null;   // catálogo no instalado: ya lo advierte AvisoCatalogo
+            if (ctx.Catalogo.Values.Any(c => c.Origen is null))
+            {
+                advertencias.Add("La BD no informa las filas con fórmula de cada cuadro (falta db/fase3/08_origen_cuadros.sql): " +
+                                 "no se puede resumir la fuente de los datos por cuadro.");
+                return null;
+            }
+            var origenes = cuadros.Select(c => ctx.Catalogo.TryGetValue(c.Id, out var def) ? def.Origen! : OrigenDatos.Json)
+                .Concat(ctx.Catalogo.Keys.Except(cuadros.Select(c => c.Id), StringComparer.OrdinalIgnoreCase).Select(k => ctx.Catalogo[k].Origen!))
+                .ToList();
+            return new CuadrosPorOrigen(origenes.Count(o => o == OrigenDatos.Bd), origenes.Count(o => o == OrigenDatos.Json),
+                origenes.Count(o => o == OrigenDatos.Mixto));
         }
 
         // =====================================================================================
         // Ventana, cachés y circuito
         // =====================================================================================
 
-        /// <summary>Estado de la BD para la carga vigente: ventana, eje de meses, mapa de ids y cachés.</summary>
+        /// <summary>Estado de la BD para la carga vigente: ventana, eje de meses, mapa de ids, catálogo y cachés.</summary>
         private sealed class Contexto
         {
-            public Contexto(VentanaBd ventana, IReadOnlyDictionary<string, int> ids, IReadOnlyList<string> advertenciasMapa, DateTime version, int capacidad)
+            public Contexto(VentanaBd ventana, IReadOnlyDictionary<string, int> ids, IReadOnlyDictionary<int, string?> tipoPorIfi,
+                IReadOnlyList<string> advertenciasMapa, IReadOnlyDictionary<string, CuadroBd> catalogo, string? avisoCatalogo,
+                DateTime version, int capacidad)
             {
                 Ventana = ventana;
                 Eje = Periodos.Meses(ventana.Desde, ventana.Hasta);
                 Ids = ids;
+                TipoPorIfi = tipoPorIfi;
                 AdvertenciasMapa = advertenciasMapa;
+                Catalogo = catalogo;
+                AvisoCatalogo = avisoCatalogo;
                 Version = version;
                 Saldos = new CacheLru<SeriesBd>(capacidad);
                 Indicadores = new CacheLru<SeriesBd>(capacidad);
                 Sectores = new CacheLru<SeriesBd>(16);
+                Calculados = new CacheLru<CuadroCalculadoBd>(capacidad * 5);
+                Plantillas = new CacheLru<PlantillaBd>(32);
             }
 
             public VentanaBd Ventana { get; }
@@ -273,6 +364,18 @@ namespace BackendDF.Data.FuenteHibrida
             public string[] Eje { get; }
 
             public IReadOnlyDictionary<string, int> Ids { get; }
+            public IReadOnlyDictionary<int, string?> TipoPorIfi { get; }
+
+            /// <summary>Catálogo de cuadros de la BD (Fase 2); vacío si no está instalado: se usa la plantilla JSON.</summary>
+            public IReadOnlyDictionary<string, CuadroBd> Catalogo { get; }
+            public string? AvisoCatalogo { get; }
+
+            /// <summary>Cuadros armados por (cuadro, entidad o sector, sub-vista).</summary>
+            public CacheLru<CuadroCalculadoBd> Calculados { get; }
+
+            /// <summary>Plantillas por (cuadro, variante), para la carga masiva de REP01.</summary>
+            public CacheLru<PlantillaBd> Plantillas { get; }
+
             public IReadOnlyList<string> AdvertenciasMapa { get; }
             public DateTime Version { get; }
             public CacheLru<SeriesBd> Saldos { get; }
@@ -310,13 +413,16 @@ namespace BackendDF.Data.FuenteHibrida
                     var ventana = await _repo.ObtenerVentanaAsync(ct);
                     if (ctx is null || ctx.Ventana.Firma != ventana.Firma)
                     {
-                        var (ids, advertencias) = _mapa.Resolver(await _repo.ListarIfiAsync(ct));
-                        ctx = new Contexto(ventana, ids, advertencias, Ahora, _capacidadCache);
+                        var ifis = await _repo.ListarIfiAsync(ct);
+                        var (ids, advertencias) = _mapa.Resolver(ifis);
+                        var (catalogo, avisoCatalogo) = await CargarCatalogoAsync(ct);
+                        ctx = new Contexto(ventana, ids, ifis.ToDictionary(i => i.IfiId, i => i.TipoEntidad), advertencias,
+                            catalogo, avisoCatalogo, Ahora, _capacidadCache);
                         _contexto = ctx;
                         _logger.LogInformation(
-                            "Fuente SQL: ventana {Desde}..{Hasta}, {Entidades} entidades mapeadas, firma {Firma}",
-                            ventana.Desde, ventana.Hasta, ids.Count, ventana.Firma);
-                        foreach (var advertencia in advertencias)
+                            "Fuente SQL: ventana {Desde}..{Hasta}, {Entidades} entidades mapeadas, {Cuadros} cuadros en el catálogo, firma {Firma}",
+                            ventana.Desde, ventana.Hasta, ids.Count, catalogo.Count, ventana.Firma);
+                        foreach (var advertencia in advertencias.Append(avisoCatalogo).OfType<string>())
                             _logger.LogWarning("{Advertencia}", advertencia);
                     }
                     _revisadoEn = Ahora;
@@ -333,6 +439,44 @@ namespace BackendDF.Data.FuenteHibrida
             {
                 _refresco.Release();
             }
+        }
+
+        /// <summary>
+        /// Catálogo de cuadros (Fase 2). Si sus procedimientos no existen (Fase 2 sin instalar) no
+        /// es una caída de SQL: se sigue con la plantilla JSON y se avisa en <c>/api/meta</c>.
+        /// </summary>
+        private async Task<(IReadOnlyDictionary<string, CuadroBd> Catalogo, string? Aviso)> CargarCatalogoAsync(CancellationToken ct)
+        {
+            try
+            {
+                var cuadros = await _repo.ListarCuadrosAsync(ct);
+                return (cuadros.ToDictionary(c => c.Id, StringComparer.OrdinalIgnoreCase), null);
+            }
+            catch (DbException ex)
+            {
+                return (new Dictionary<string, CuadroBd>(),
+                    $"Catálogo de cuadros no disponible ({ex.GetBaseException().Message}); se usa la plantilla de los JSON.");
+            }
+        }
+
+        /// <summary>
+        /// Cuadro del catálogo armado por el SP para la entidad o el sector de la consulta; null si
+        /// la entidad no está mapeada, el sector no se reconoce o SQL falla (el llamador usa la ruta JSON).
+        /// </summary>
+        private Task<CuadroCalculadoBd?> CuadroCalculadoAsync(Contexto ctx, CuadroBd cuadro, string? entidadId, string? filtro, string? idSub)
+        {
+            if (cuadro.EsDeEntidad)
+            {
+                if (entidadId is null || !ctx.Ids.TryGetValue(entidadId, out var ifiId))
+                    return Task.FromResult<CuadroCalculadoBd?>(null);
+                return IntentarAsync(() => ctx.Calculados.ObtenerAsync($"{cuadro.Id}|E{ifiId}|{idSub}",
+                    () => _repo.ObtenerCuadroEntidadAsync(cuadro.Id, ifiId, idSub, CancellationToken.None)));
+            }
+
+            if (!FiltrosSistema.TryObtener(filtro, out var regla))
+                return Task.FromResult<CuadroCalculadoBd?>(null);
+            return IntentarAsync(() => ctx.Calculados.ObtenerAsync($"{cuadro.Id}|S{filtro}|{idSub}",
+                () => _repo.ObtenerCuadroSectorAsync(cuadro.Id, regla.TiposEntidad, regla.Segmentos, idSub, CancellationToken.None)));
         }
 
         private Task<SeriesBd?> SaldosEntidadAsync(Contexto ctx, int ifiId) =>
@@ -361,6 +505,9 @@ namespace BackendDF.Data.FuenteHibrida
             // de abajo ocurre después de que el llamador guardó la tarea y la limpieza no se pierde.
             await Task.Yield();
 
+            if (ctx.Catalogo.TryGetValue("REP01", out var rep01) && await ConstruirReportesCatalogoAsync(ctx, rep01, reportes) is { } desdeCatalogo)
+                return desdeCatalogo;
+
             IReadOnlyDictionary<int, SeriesBd>? masivo = null;
             if (_reglas.UsaSql("REP01"))
             {
@@ -387,6 +534,41 @@ namespace BackendDF.Data.FuenteHibrida
             if (masivo is null && _reglas.UsaSql("REP01"))
                 lock (ctx)
                     ctx.Reportes = null;   // se reintenta en el próximo pedido
+            return salida;
+        }
+
+        /// <summary>
+        /// REP01 de todas las entidades desde el catálogo: una consulta de valores para todas y una
+        /// plantilla por variante. null si SQL falla (el llamador sigue con la ruta de Fase 1).
+        /// </summary>
+        private async Task<IReadOnlyDictionary<string, ReporteEntidad>?> ConstruirReportesCatalogoAsync(
+            Contexto ctx, CuadroBd rep01, IReadOnlyDictionary<string, ReporteEntidad> reportes)
+        {
+            var ifiIds = reportes.Keys.Where(ctx.Ids.ContainsKey).Select(k => ctx.Ids[k]).Distinct().ToList();
+            var valores = await IntentarAsync(() => _repo.ObtenerValoresCuadroEntidadesAsync(rep01.Id, ifiIds, null, CancellationToken.None));
+            if (valores is null)
+                return null;
+
+            string Variante(int ifiId) => rep01.ResolverVariante(ctx.TipoPorIfi.GetValueOrDefault(ifiId));
+
+            var plantillas = new Dictionary<string, PlantillaBd>(StringComparer.Ordinal);
+            foreach (var variante in ifiIds.Select(Variante).Distinct())
+            {
+                var plantilla = await IntentarAsync(() => ctx.Plantillas.ObtenerAsync($"{rep01.Id}|{variante}",
+                    () => _repo.ObtenerPlantillaAsync(rep01.Id, variante, null, CancellationToken.None)));
+                if (plantilla is null)
+                    return null;
+                plantillas[variante] = plantilla;
+            }
+
+            var salida = new Dictionary<string, ReporteEntidad>(reportes.Count, StringComparer.Ordinal);
+            foreach (var (id, reporte) in reportes)
+            {
+                salida[id] = ctx.Ids.TryGetValue(id, out var ifiId)
+                    ? ArmadorCatalogo.Reporte(id, plantillas[Variante(ifiId)].Filas,
+                        valores.TryGetValue(ifiId, out var v) ? v : SeriesBd.Vacia, reporte, ctx.Eje)
+                    : CombinarReporte(reporte, ctx.Eje, null);
+            }
             return salida;
         }
 
@@ -438,14 +620,15 @@ namespace BackendDF.Data.FuenteHibrida
                     continue;
 
                 double[] valores;
+                var origen = OrigenDatos.Bd;
                 if (cuenta is not null && saldos is not null && ReglasCuadro.EsFilaSaldo(fila))
                     valores = proyector.Serie(saldos, cuenta, ReglasCuadro.EscalaSaldo);
                 else if (deSql && indicadores is not null && ReglasCuadro.TryEscalaIndicador(fila.Cuc, out var escala) && indicadores.TryObtener(fila.Cuc!, out _))
                     valores = proyector.Serie(indicadores, fila.Cuc!, escala);
                 else
-                    valores = proyector.Json(fila.Periodos, fila.Valores);
+                    (valores, origen) = (proyector.Json(fila.Periodos, fila.Valores), OrigenDatos.Json);
 
-                salida.Add(Copiar(fila, eje, valores));
+                salida.Add(Copiar(fila, eje, valores, origen));
             }
             return salida;
         }
@@ -459,15 +642,16 @@ namespace BackendDF.Data.FuenteHibrida
                 var cuenta = ReglasCuadro.Cuenta(c.Cuc);
                 if (cuenta is not null && _reglas.Omitida(cuenta))
                     continue;
-                var valores = cuenta is not null && saldos is not null
-                    ? proyector.Serie(saldos, cuenta, ReglasCuadro.EscalaSaldo)
+                var deBd = cuenta is not null && saldos is not null;
+                var valores = deBd
+                    ? proyector.Serie(saldos!, cuenta!, ReglasCuadro.EscalaSaldo)
                     : proyector.Json(reporte.Periodos, c.Valores);
-                cuentas.Add(new CuentaReporte(c.Cuc, c.Variable, valores));
+                cuentas.Add(new CuentaReporte(c.Cuc, c.Variable, valores, c.SinHistoriaHasta, deBd ? OrigenDatos.Bd : OrigenDatos.Json));
             }
             return new ReporteEntidad(reporte.EntidadId, eje, cuentas);
         }
 
-        private static FilaDatos Copiar(FilaDatos f, string[] periodos, double[] valores) => new()
+        private static FilaDatos Copiar(FilaDatos f, string[] periodos, double[] valores, string? origen) => new()
         {
             Cuadro = f.Cuadro,
             Filtro = f.Filtro,
@@ -485,48 +669,8 @@ namespace BackendDF.Data.FuenteHibrida
             RangoActivos = f.RangoActivos,
             DpaPr = f.DpaPr,
             Periodos = periodos,
-            Valores = valores
+            Valores = valores,
+            Origen = origen
         };
-
-        /// <summary>Proyecta series (ordenadas por período) sobre el eje; el mapeo se calcula una vez por eje de origen.</summary>
-        private sealed class Proyector
-        {
-            private readonly string[] _eje;
-            private readonly Dictionary<string[], int[]> _mapas = new(ReferenceEqualityComparer.Instance);
-
-            public Proyector(string[] eje)
-            {
-                _eje = eje;
-            }
-
-            public double[] Json(string[] periodos, double[] valores) => Aplicar(periodos, valores, 1);
-
-            /// <summary>Serie de la BD escalada; si el código no tiene filas, todo NaN (la BD manda).</summary>
-            public double[] Serie(SeriesBd series, string codigo, double escala)
-            {
-                if (!series.TryObtener(codigo, out var valores))
-                {
-                    var vacio = new double[_eje.Length];
-                    Array.Fill(vacio, double.NaN);
-                    return vacio;
-                }
-                return Aplicar(series.Periodos, valores, escala);
-            }
-
-            private double[] Aplicar(string[] origen, double[] valores, double escala)
-            {
-                if (!_mapas.TryGetValue(origen, out var mapa))
-                {
-                    mapa = new int[_eje.Length];
-                    for (var i = 0; i < _eje.Length; i++)
-                        mapa[i] = Array.BinarySearch(origen, _eje[i], StringComparer.Ordinal);
-                    _mapas[origen] = mapa;
-                }
-                var salida = new double[mapa.Length];
-                for (var i = 0; i < mapa.Length; i++)
-                    salida[i] = mapa[i] >= 0 ? valores[mapa[i]] * escala : double.NaN;
-                return salida;
-            }
-        }
     }
 }

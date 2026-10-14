@@ -68,9 +68,10 @@ namespace BackendDF.Tests
             Assert.Equal(HttpStatusCode.OK, status);
             Assert.Equal(212, Filas(json).Length);
             var periodos = json.GetProperty("periodos").EnumerateArray().Select(p => p.GetString()).ToArray();
-            Assert.Equal(69, periodos.Length);
+            // Datos de oct-2026: SFN01 llega hasta 2027-02 (70 meses).
+            Assert.Equal(70, periodos.Length);
             Assert.Equal("2021-05", periodos[0]);
-            Assert.Equal("2027-01", periodos[^1]);
+            Assert.Equal("2027-02", periodos[^1]);
             Assert.Equal("SFN01|nacional|@1", Filas(json)[0].GetProperty("clave").GetString());
         }
 

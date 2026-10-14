@@ -281,6 +281,11 @@ Contiene 776 CUC. De ellos, 330 son saldos `@…` presentes en el `.sav`. El res
 6. **Insumos externos**: macro BCE, cartera por rango (EFI09/CAR03), depósitos y tasas pasivas por plazo (EFI10/TPE02).
 7. **Nombres de cuentas**: resuelto en buena parte con `Cuenta`. Quedan 544 genéricos `cta NNNN`, ninguno usado en EFI06; se completan con `Variable` de EFI06/SFN06.
 8. **Seguridad**: hay credenciales de `sa` en texto plano dentro de `sp_etl_bce` (E7).
+9. **Cuadros geográficos (pendiente, oct‑2026).** Llegaron con los JSON nuevos: GEO01‑04, PDA01‑02, GEE01/03/04 y PDE01‑02.
+   - No salen del `.sav`. Ya conservan sus fechas (en `ReglasCuadro.CuadrosFechasJsonPorDefecto`).
+   - **Todavía no se pueden consultar bien por la API**: GEO/PDA salen vacíos y GEE/PDE solo responden algunos tipos de crédito.
+   - Propuesta de contrato y problemas de datos D1‑D7: [`propuesta-cuadros-geograficos.md`](propuesta-cuadros-geograficos.md).
+   - **Espera** el visto bueno de frontend y la corrección de datos de quien genera los JSON.
 
 ---
 
@@ -482,6 +487,42 @@ Mismos SPs 1:1 con `IFuenteDatos` que proponía v1 (`sp_Entidades_Listar`, `sp_C
 - `SqlIntegracionTests`: contra la BD real; se omiten si no hay conexión.
 - Las de contrato existentes siguen usando solo JSON.
 - Resultado: 72/72 en verde.
+
+**Fase 2 — catálogo de cuadros (el JSON deja de ser la plantilla).** Scripts en [`db/fase2/`](../db/fase2/README.md).
+
+**BD:**
+- Tablas `dbo.Cuadro`, `dbo.CuadroFila` y `dbo.CuadroFilaTermino`: 29 cuadros (todos menos los macro), con variantes de plantilla por tipo de entidad o sector.
+- La semilla la genera `tools/catalogo/generar_semilla.py`.
+- Las fórmulas se calculan en el SP. Ya cargadas: `pasipat` y los 7 márgenes del PyG, validados contra los JSON.
+- Las filas sin fórmula todavía tienen `Calculo = 'JSON'`.
+
+**Backend:**
+
+| Pieza | Archivo |
+|---|---|
+| Métodos del catálogo en la capa repository | `IBcoCoopRepositorio` / `BcoCoopRepositorioSql` (`ListarCuadros`, `ObtenerPlantilla`, `ObtenerCuadroEntidad`/`Sector`, `ObtenerValoresCuadroEntidades`) |
+| Arma cuadros y REP01 desde el catálogo; las filas `JSON` toman el valor del JSON emparejando por código | `Data/FuenteHibrida/ArmadorCatalogo.cs` |
+| Usa el catálogo si existe; si no (macro, catálogo no instalado o SQL caído), la ruta de Fase 1 | `FuenteDatosHibrida` |
+
+`CuadrosSql`, `CuadrosFechasJson` y `GruposOmitidos` salen de `appsettings`: ahora lo decide el catálogo.
+
+**Fase 3 — fórmulas para las filas `JSON`.** Scripts en [`db/fase3/`](../db/fase3/README.md).
+- **Paso 1** (`01`): análisis vertical y 28 fórmulas `SUMA`/`RATIO` descubiertas.
+- **Paso 2** (`03`, `04`, `06`): operaciones en el tiempo. `dbo.CuadroFila` suma `OperacionN`/`OperacionD` (`ANUALIZADO`, `VARIACION_1/12`, `RETARDO_1/12`, `PROMEDIO_DIC`, `PROMEDIO_DIC_ROA`, `BASE_ROE_DIC`). Las aplica `dbo.AplicarOperacionesTiempo` dentro de los SPs de valores, que conservan firma y columnas.
+  - Se cargan 7 467 filas: el análisis horizontal (6 991), las filas `@cuentaA` anualizadas, la variación mensual de EFI04/SFN04, las `tasa_X` con base conocida, y ROA y ROE.
+  - Quedan unas 3 077 filas `JSON`; `06_pruebas_tiempo.sql` imprime el conteo exacto por cuadro.
+  - La validación contra los JSON y lo excluido (0 publicado, historia reprocesada, ROA que contradice al ROE publicado) están en [`formulas_tiempo_reporte.md`](../db/fase3/formulas_tiempo_reporte.md).
+- **Ventana (opción A):** `B11` empieza en 2024‑01, así que en 2024 quedan sin valor las tasas a 12 meses, los promedios (ROA/ROE de enero a noviembre) y la variación de 2024‑01. Para que el frontend no lo confunda con un error:
+  - Cada fila de `GET /api/cuadros/{id}` y cada cuenta de `GET /api/entidades/{id}/reporte` trae **`sinHistoriaHasta`** (`yyyy-MM` o `null`). Un `null` en `valores` en ese período o antes significa "falta la historia previa en la BD". Solo se publica si cae dentro de los períodos devueltos.
+  - Los cuadros que no son árbol agregan además una nota en `notas`.
+  - Si más adelante se carga 2023 en `B11` (opción B), la marca se corre sola, porque se calcula con el primer mes de la ventana.
+- **Paso 2b** (`07`): 40 fórmulas que no necesitan la nota técnica. Son los márgenes anualizados, la cartera por vencer y vencida, VIS, sus tasas y `PTR_9`. La cartera por estado de los **bancos** no sale del balance (E6) y queda `JSON` hasta confirmar su fuente.
+- **Fuente de los datos** (`08` + backend), para que el frontend distinga qué viene de la BD y qué del JSON:
+  - Cada fila de `GET /api/cuadros/{id}` y cada cuenta de `GET /api/entidades/{id}/reporte` trae **`fuenteDatos`**: `"bd"` (B11, `IndicadorData` o fórmula del catálogo), `"json"` o `null` (fila pendiente del catálogo sin fila en el JSON).
+  - El cuadro y el reporte traen `fuenteDatos` agregado (`"bd"` | `"json"` | `"mixto"`) y `filasPorFuente` (`{ bd, json, sinFuente }`).
+  - `GET /api/meta` trae `cuadrosPorFuente` (`{ bd, json, mixto }`), según el catálogo: `api.ListarCuadros` informa `FilasBd`/`FilasJson` desde `08`. Los macro cuentan como JSON; con SQL caído, todo es JSON.
+  - Se llama `fuenteDatos` y no `origen` porque `GET /api/cuadros` ya usa `origen` para macro / sistema / entidad.
+- **Rankings:** no cambian. Trabajan con saldos y participaciones; un vacío cuenta como 0, como en el original.
 
 ---
 

@@ -24,5 +24,22 @@ namespace BackendDF.Data.Repositorios
 
         /// <summary><c>api.ObtenerIndicadoresEntidad</c>. <paramref name="codigos"/> null = todos.</summary>
         Task<SeriesBd> ObtenerIndicadoresEntidadAsync(int ifiId, IEnumerable<string>? codigos, CancellationToken ct);
+
+        // ---- Catálogo de cuadros (Fase 2, db/fase2/02_procedimientos_cuadros.sql) ----
+
+        /// <summary><c>api.ListarCuadros</c></summary>
+        Task<IReadOnlyList<CuadroBd>> ListarCuadrosAsync(CancellationToken ct);
+
+        /// <summary><c>api.ObtenerPlantilla</c>. <paramref name="idSub"/> null = todas las sub-vistas.</summary>
+        Task<PlantillaBd> ObtenerPlantillaAsync(string cuadro, string? variante, string? idSub, CancellationToken ct);
+
+        /// <summary><c>api.ObtenerCuadroEntidad</c>: plantilla según el tipo de la entidad + valores calculados.</summary>
+        Task<CuadroCalculadoBd> ObtenerCuadroEntidadAsync(string cuadro, int ifiId, string? idSub, CancellationToken ct);
+
+        /// <summary><c>api.ObtenerCuadroSector</c>: plantilla según tipos/segmentos + valores calculados.</summary>
+        Task<CuadroCalculadoBd> ObtenerCuadroSectorAsync(string cuadro, IEnumerable<string> tiposEntidad, IEnumerable<int>? segmentos, string? idSub, CancellationToken ct);
+
+        /// <summary><c>api.ObtenerValoresCuadroEntidades</c>: valores calculados por IFIID (claves = id de fila).</summary>
+        Task<IReadOnlyDictionary<int, SeriesBd>> ObtenerValoresCuadroEntidadesAsync(string cuadro, IEnumerable<int> ifiIds, string? idSub, CancellationToken ct);
     }
 }

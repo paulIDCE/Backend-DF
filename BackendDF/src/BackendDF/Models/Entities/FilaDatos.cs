@@ -37,6 +37,18 @@ namespace BackendDF.Models.Entities
         public string? DpaPr { get; init; }
 
         public string[] Periodos { get; init; } = [];
+
+        /// <summary>
+        /// Último período cuyo valor falta porque la BD no tiene los meses anteriores que pide la
+        /// operación de la fila (tasas a 12 meses, variación mensual, promedios); null si no aplica.
+        /// </summary>
+        public string? SinHistoriaHasta { get; init; }
+
+        /// <summary>
+        /// De dónde salen los valores (<see cref="Logic.Dominio.OrigenDatos"/>): "bd", "json", o null si es
+        /// una fila del catálogo sin fórmula ni fila equivalente en el JSON. Por defecto JSON.
+        /// </summary>
+        public string? Origen { get; init; } = Logic.Dominio.OrigenDatos.Json;
         public double[] Valores { get; init; } = [];
     }
 }

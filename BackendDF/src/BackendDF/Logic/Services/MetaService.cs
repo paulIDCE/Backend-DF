@@ -21,7 +21,8 @@ namespace BackendDF.Logic.Services
                 info.VersionDatos,
                 info.Fuentes.Select(f => new FuenteDTO(f.Fuente, f.Archivo, f.Archivos, f.Desde, f.Hasta, f.Modificado)).ToList(),
                 info.UltimoCorteComun,
-                info.Advertencias);
+                info.Advertencias,
+                info.CuadrosPorOrigen is { } c ? new CuadrosPorFuenteDTO(c.Bd, c.Json, c.Mixto) : null);
         }
     }
 }
