@@ -27,7 +27,17 @@ namespace BackendDF.Data.FuenteSql
             "SFN01", "SFN02", "SFN03", "SFN04", "SFN05", "SFN06", "SFN07", "SFN08"
         ];
 
-        public static readonly string[] CuadrosFechasJsonPorDefecto = ["EFI09", "TPE02", "CAR03"];
+        /// <summary>
+        /// No salen del .sav: cartera por rango, tasas pasivas por plazo y los cuadros geográficos
+        /// (colocaciones/captaciones por provincia y cantón, puntos de atención) que llegaron con
+        /// los JSON de oct-2026. Conservan las fechas de su fuente.
+        /// </summary>
+        public static readonly string[] CuadrosFechasJsonPorDefecto =
+        [
+            "EFI09", "CAR03", "TPE01", "TPE02",
+            "GEO01", "GEO02", "GEO03", "GEO04", "PDA01", "PDA02",
+            "GEE01", "GEE02", "GEE03", "GEE04", "PDE01", "PDE02"
+        ];
 
         public static readonly string[] GruposOmitidosPorDefecto = ["6", "7"];
 

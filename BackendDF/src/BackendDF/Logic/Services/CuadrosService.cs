@@ -70,8 +70,11 @@ namespace BackendDF.Logic.Services
             // {contexto} de la clave: sector o entidad + análisis o crédito, unidos por "-".
             var contextoClave = string.Join("-", new[] { sector?.Id ?? entidad?.Id, analisis?.Id ?? credito?.Id }.OfType<string>());
             var filasDto = ArmarFilas(cuadro.Id, contextoClave, filas, periodos, esArbol);
+            var fuente = OrigenDatos.Agregar(filas.Select(f => f.Origen));
 
             var notas = p.Notas && !esArbol ? await _fuente.ObtenerNotasAsync(cuadro.Id, ct) : [];
+            if (p.Notas && !esArbol && filasDto.Select(f => f.SinHistoriaHasta).Max(StringComparer.Ordinal) is { } sinHistoria)
+                notas = [.. notas, NotaSinHistoria(sinHistoria)];
             var primera = filas.Count > 0 ? filas[0] : null;
 
             return new CuadroDTO(
@@ -89,7 +92,9 @@ namespace BackendDF.Logic.Services
                 RangoPeriodosDTO.De(disponibles),
                 periodos,
                 filasDto,
-                notas);
+                notas,
+                fuente.Origen,
+                new FilasPorFuenteDTO(fuente.Bd, fuente.Json, fuente.SinFuente));
         }
 
         /// <summary>
@@ -115,6 +120,11 @@ namespace BackendDF.Logic.Services
                 if (string.IsNullOrWhiteSpace(valor) && requeridos.Contains(nombre))
                     throw CustomException.Validacion($"El cuadro {cuadro.Id} requiere el parámetro '{nombre}'.");
         }
+
+        /// <summary>Nota para las filas con <see cref="FilaCuadroDTO.SinHistoriaHasta"/> (vacíos por falta de meses previos en la BD).</summary>
+        internal static string NotaSinHistoria(string hasta) =>
+            $"Los valores vacíos hasta {hasta} en tasas y variaciones a 12 meses, variaciones mensuales y promedios del año " +
+            "se deben a que la base de datos no tiene los meses anteriores necesarios para calcularlos; no son un error de cálculo.";
 
         private static List<FilaCuadroDTO> ArmarFilas(string cuadroId, string contexto, IReadOnlyList<FilaDatos> filas, string[] periodos, bool esArbol)
         {
@@ -145,7 +155,9 @@ namespace BackendDF.Logic.Services
                     esArbol ? f.CodigoBase : null,
                     esArbol ? f.Nivel ?? 0 : f.NivelJerarquia,
                     padres?[i],
-                    alineador.Alinear(f.Periodos, f.Valores)));
+                    alineador.Alinear(f.Periodos, f.Valores),
+                    Periodos.SinHistoriaVisible(f.SinHistoriaHasta, periodos),
+                    f.Origen));
             }
             return salida;
         }

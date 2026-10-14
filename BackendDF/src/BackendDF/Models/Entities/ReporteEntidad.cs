@@ -1,7 +1,10 @@
 namespace BackendDF.Models.Entities
 {
     /// <summary>Una cuenta del reporte REP01: valores alineados con <see cref="ReporteEntidad.Periodos"/>.</summary>
-    public sealed record CuentaReporte(string Cuc, string? Variable, double[] Valores);
+    /// <param name="SinHistoriaHasta">Ver <see cref="FilaDatos.SinHistoriaHasta"/>.</param>
+    /// <param name="Origen">Ver <see cref="FilaDatos.Origen"/>.</param>
+    public sealed record CuentaReporte(string Cuc, string? Variable, double[] Valores, string? SinHistoriaHasta = null,
+        string? Origen = Logic.Dominio.OrigenDatos.Json);
 
     /// <summary>
     /// Reporte <c>REP01</c> de una entidad (tipo F) en forma compacta: la unión ordenada de sus

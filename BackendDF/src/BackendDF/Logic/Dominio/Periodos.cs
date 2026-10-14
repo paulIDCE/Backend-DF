@@ -117,6 +117,13 @@ namespace BackendDF.Logic.Dominio
             return [.. meses];
         }
 
+        /// <summary>
+        /// La marca "sin historia hasta" de una fila si cae dentro de los <paramref name="periodos"/> que se
+        /// devuelven; null si no hay marca o es anterior al primer período (no explica ningún vacío visible).
+        /// </summary>
+        public static string? SinHistoriaVisible(string? hasta, IReadOnlyList<string> periodos) =>
+            hasta is null || periodos.Count == 0 || string.CompareOrdinal(hasta, periodos[0]) < 0 ? null : hasta;
+
         /// <summary><c>YYYY-MM</c> menos N meses.</summary>
         public static string RestarMeses(string mensual, int meses)
         {

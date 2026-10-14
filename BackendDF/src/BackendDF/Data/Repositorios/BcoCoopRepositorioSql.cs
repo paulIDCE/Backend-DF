@@ -100,7 +100,141 @@ namespace BackendDF.Data.Repositorios
             return SeriesBd.Construir(filas);
         }
 
-        private async Task EjecutarAsync(string procedimiento, Action<SqlParameterCollection>? parametros, Action<SqlDataReader> leerFila, CancellationToken ct)
+        // ---- Catálogo de cuadros (Fase 2) ----
+
+        public async Task<IReadOnlyList<CuadroBd>> ListarCuadrosAsync(CancellationToken ct)
+        {
+            var lista = new List<CuadroBd>();
+            await EjecutarAsync("api.ListarCuadros", null, r => lista.Add(new CuadroBd(
+                r.GetString(r.GetOrdinal("CuadroID")),
+                r.GetString(r.GetOrdinal("Titulo")),
+                Texto(r, "Unidad"),
+                r.GetString(r.GetOrdinal("Ambito")),
+                r.GetString(r.GetOrdinal("Tipo")),
+                r.GetString(r.GetOrdinal("Frecuencia")),
+                r.GetBoolean(r.GetOrdinal("FechasJson")),
+                r.GetInt32(r.GetOrdinal("Orden")),
+                (Texto(r, "Variantes") ?? "*").Split('|', StringSplitOptions.RemoveEmptyEntries),
+                EnteroOpcional(r, "FilasBd"),
+                EnteroOpcional(r, "FilasJson"))), ct);
+            return lista;
+        }
+
+        public async Task<PlantillaBd> ObtenerPlantillaAsync(string cuadro, string? variante, string? idSub, CancellationToken ct)
+        {
+            var filas = new List<FilaCatalogoBd>();
+            await EjecutarAsync("api.ObtenerPlantilla", p =>
+            {
+                p.Add("@CuadroID", SqlDbType.VarChar, 16).Value = cuadro;
+                p.Add("@Variante", SqlDbType.VarChar, 20).Value = (object?)variante ?? DBNull.Value;
+                p.Add("@IdSub", SqlDbType.NVarChar, 80).Value = (object?)idSub ?? DBNull.Value;
+            }, r => filas.Add(LeerFilaCatalogo(r)), ct);
+            return new PlantillaBd(filas);
+        }
+
+        public async Task<CuadroCalculadoBd> ObtenerCuadroEntidadAsync(string cuadro, int ifiId, string? idSub, CancellationToken ct)
+        {
+            var filas = new List<FilaCatalogoBd>();
+            var valores = new List<(string, string, double)>();
+            await EjecutarVariosAsync("api.ObtenerCuadroEntidad", p =>
+            {
+                p.Add("@CuadroID", SqlDbType.VarChar, 16).Value = cuadro;
+                p.Add("@IFIID", SqlDbType.Int).Value = ifiId;
+                p.Add("@IdSub", SqlDbType.NVarChar, 80).Value = (object?)idSub ?? DBNull.Value;
+            }, ct,
+                r => filas.Add(LeerFilaCatalogo(r)),
+                r => valores.Add((Clave(r.GetInt32(1)), r.GetString(2), Flotante(r, 3))));   // IFIID, CuadroFilaID, Periodo, Valor
+            return new CuadroCalculadoBd(filas, SeriesBd.Construir(valores));
+        }
+
+        public async Task<CuadroCalculadoBd> ObtenerCuadroSectorAsync(string cuadro, IEnumerable<string> tiposEntidad, IEnumerable<int>? segmentos, string? idSub, CancellationToken ct)
+        {
+            var filas = new List<FilaCatalogoBd>();
+            var valores = new List<(string, string, double)>();
+            await EjecutarVariosAsync("api.ObtenerCuadroSector", p =>
+            {
+                p.Add("@CuadroID", SqlDbType.VarChar, 16).Value = cuadro;
+                AgregarLista(p, "@TiposEntidad", tiposEntidad, 100);
+                AgregarLista(p, "@Segmentos", segmentos?.Select(s => s.ToString(System.Globalization.CultureInfo.InvariantCulture)), 100);
+                p.Add("@IdSub", SqlDbType.NVarChar, 80).Value = (object?)idSub ?? DBNull.Value;
+            }, ct,
+                r => filas.Add(LeerFilaCatalogo(r)),
+                r => valores.Add((Clave(r.GetInt32(0)), r.GetString(1), Flotante(r, 2))));   // CuadroFilaID, Periodo, Valor
+            return new CuadroCalculadoBd(filas, SeriesBd.Construir(valores));
+        }
+
+        public async Task<IReadOnlyDictionary<int, SeriesBd>> ObtenerValoresCuadroEntidadesAsync(string cuadro, IEnumerable<int> ifiIds, string? idSub, CancellationToken ct)
+        {
+            var ids = ifiIds.Distinct().ToList();
+            if (ids.Count == 0)
+                return new Dictionary<int, SeriesBd>();
+
+            var porEntidad = new Dictionary<int, List<(string, string, double)>>();
+            await EjecutarAsync("api.ObtenerValoresCuadroEntidades", p =>
+            {
+                p.Add("@CuadroID", SqlDbType.VarChar, 16).Value = cuadro;
+                AgregarLista(p, "@IFIIDs", ids.Select(i => i.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                p.Add("@IdSub", SqlDbType.NVarChar, 80).Value = (object?)idSub ?? DBNull.Value;
+            }, r =>
+            {
+                var id = r.GetInt32(0);
+                if (!porEntidad.TryGetValue(id, out var filas))
+                    porEntidad[id] = filas = [];
+                filas.Add((Clave(r.GetInt32(1)), r.GetString(2), Flotante(r, 3)));
+            }, ct);
+            return porEntidad.ToDictionary(e => e.Key, e => SeriesBd.Construir(e.Value));
+        }
+
+        private static FilaCatalogoBd LeerFilaCatalogo(SqlDataReader r) => new(
+            r.GetInt32(r.GetOrdinal("CuadroFilaID")),
+            r.GetString(r.GetOrdinal("Variante")),
+            r.GetString(r.GetOrdinal("IdSub")),
+            r.GetInt32(r.GetOrdinal("Orden")),
+            Texto(r, "Codigo"),
+            Texto(r, "CodigoBase"),
+            Texto(r, "Grupo"),
+            Texto(r, "Variable"),
+            r.GetByte(r.GetOrdinal("Nivel")),
+            Texto(r, "SegmentoCredito"),
+            Texto(r, "Unidad"),
+            r.GetString(r.GetOrdinal("Calculo")),
+            Operacion(r, "OperacionN"),
+            Operacion(r, "OperacionD"));
+
+        /// <summary>Columna de operación en el tiempo; "NIVEL" si la BD aún no la tiene (antes de db/fase3/03).</summary>
+        private static string Operacion(SqlDataReader r, string columna) =>
+            Opcional(r, columna) is { } i && !r.IsDBNull(i) ? r.GetString(i) : OperacionTiempo.Nivel;
+
+        /// <summary>Entero de una columna que la BD puede no tener todavía (antes de db/fase3/08); null si falta.</summary>
+        private static int? EnteroOpcional(SqlDataReader r, string columna) =>
+            Opcional(r, columna) is { } i && !r.IsDBNull(i) ? r.GetInt32(i) : null;
+
+        /// <summary>Índice de una columna que agrega un script de fase 3, o null si la BD aún no la tiene.</summary>
+        private static int? Opcional(SqlDataReader r, string columna)
+        {
+            for (var i = 0; i < r.FieldCount; i++)
+                if (string.Equals(r.GetName(i), columna, StringComparison.OrdinalIgnoreCase))
+                    return i;
+            return null;
+        }
+
+        private static string Clave(int filaId) => filaId.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+        private static string? Texto(SqlDataReader r, string columna)
+        {
+            var i = r.GetOrdinal(columna);
+            return r.IsDBNull(i) ? null : r.GetString(i);
+        }
+
+        /// <summary>float NULL → NaN (sin valor, nunca 0).</summary>
+        private static double Flotante(SqlDataReader r, int columna) =>
+            r.IsDBNull(columna) ? double.NaN : r.GetDouble(columna);
+
+        private Task EjecutarAsync(string procedimiento, Action<SqlParameterCollection>? parametros, Action<SqlDataReader> leerFila, CancellationToken ct) =>
+            EjecutarVariosAsync(procedimiento, parametros, ct, leerFila);
+
+        /// <summary>Ejecuta el procedimiento y lee cada resultset con su lector, en orden.</summary>
+        private async Task EjecutarVariosAsync(string procedimiento, Action<SqlParameterCollection>? parametros, CancellationToken ct, params Action<SqlDataReader>[] lectores)
         {
             await using var conexion = new SqlConnection(_cadena);
             await conexion.OpenAsync(ct);
@@ -112,8 +246,13 @@ namespace BackendDF.Data.Repositorios
             parametros?.Invoke(comando.Parameters);
 
             await using var lector = await comando.ExecuteReaderAsync(ct);
-            while (await lector.ReadAsync(ct))
-                leerFila(lector);
+            for (var i = 0; i < lectores.Length; i++)
+            {
+                if (i > 0 && !await lector.NextResultAsync(ct))
+                    throw new InvalidOperationException($"{procedimiento} devolvió menos resultsets de los esperados ({lectores.Length}).");
+                while (await lector.ReadAsync(ct))
+                    lectores[i](lector);
+            }
         }
 
         /// <summary>Lista como texto separado por comas; null (sin filtro) si no se indica.</summary>

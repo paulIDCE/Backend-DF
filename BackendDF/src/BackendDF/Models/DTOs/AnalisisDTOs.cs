@@ -7,10 +7,15 @@ namespace BackendDF.Models.DTOs
 
     public sealed record EntidadReporteDTO(string Id, string Nombre, string? Tamano, string? Rango, string? Provincia);
 
-    public sealed record CuentaReporteDTO(string Cuc, string? Variable, double?[] Valores);
+    /// <param name="SinHistoriaHasta">Igual que en <see cref="FilaCuadroDTO"/>.</param>
+    /// <param name="FuenteDatos">Igual que en <see cref="FilaCuadroDTO"/>.</param>
+    public sealed record CuentaReporteDTO(string Cuc, string? Variable, double?[] Valores, string? SinHistoriaHasta = null,
+        string? FuenteDatos = null);
 
     /// <summary><c>GET /api/entidades/{id}/reporte</c>.</summary>
-    public sealed record ReporteDTO(EntidadReporteDTO Entidad, IReadOnlyList<string> Periodos, IReadOnlyList<CuentaReporteDTO> Cuentas);
+    /// <param name="FuenteDatos">"bd" | "json" | "mixto" según las cuentas devueltas.</param>
+    public sealed record ReporteDTO(EntidadReporteDTO Entidad, IReadOnlyList<string> Periodos, IReadOnlyList<CuentaReporteDTO> Cuentas,
+        string? FuenteDatos = null, FilasPorFuenteDTO? FilasPorFuente = null);
 
     // ---- Rankings (contrato §8) ----
 
@@ -70,5 +75,12 @@ namespace BackendDF.Models.DTOs
         DateTime VersionDatos,
         IReadOnlyList<FuenteDTO> Fuentes,
         string? UltimoCorteComun,
-        IReadOnlyList<string> Advertencias);
+        IReadOnlyList<string> Advertencias,
+        CuadrosPorFuenteDTO? CuadrosPorFuente = null);
+
+    /// <summary>
+    /// Cuántos cuadros salen por completo de la BD, cuántos solo del JSON y cuántos mezclan, según el
+    /// catálogo vigente (filas con fórmula vs. filas pendientes). Con la BD caída, todos son JSON.
+    /// </summary>
+    public sealed record CuadrosPorFuenteDTO(int Bd, int Json, int Mixto);
 }

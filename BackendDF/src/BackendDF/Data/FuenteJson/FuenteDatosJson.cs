@@ -192,14 +192,14 @@ namespace BackendDF.Data.FuenteJson
         public async Task<InfoFuentes> ObtenerInfoAsync(CancellationToken ct)
         {
             var info = (await BaseAsync(ct)).Info;
-            if (_advertenciasIndice.IsEmpty)
-                return info;
+            var cuadros = await ObtenerCuadrosAsync(ct);
             return new InfoFuentes
             {
                 VersionDatos = info.VersionDatos,
                 Fuentes = info.Fuentes,
                 UltimoCorteComun = info.UltimoCorteComun,
-                Advertencias = [.. info.Advertencias, .. _advertenciasIndice]
+                Advertencias = _advertenciasIndice.IsEmpty ? info.Advertencias : [.. info.Advertencias, .. _advertenciasIndice],
+                CuadrosPorOrigen = new CuadrosPorOrigen(0, cuadros.Count, 0)   // solo JSON
             };
         }
 

@@ -32,6 +32,10 @@ namespace BackendDF.Tests
             Assert.Equal("2025-12", periodos[^1]);
             Assert.All(json.GetProperty("filas").EnumerateArray(), f => Assert.Equal(11, f.GetProperty("valores").GetArrayLength()));
             Assert.Equal("2000-12", json.GetProperty("periodosDisponibles").GetProperty("desde").GetString());
+            // Sin BD, todo sale del JSON.
+            Assert.Equal("json", json.GetProperty("fuenteDatos").GetString());
+            Assert.All(json.GetProperty("filas").EnumerateArray(), f => Assert.Equal("json", f.GetProperty("fuenteDatos").GetString()));
+            Assert.Equal(json.GetProperty("filas").GetArrayLength(), json.GetProperty("filasPorFuente").GetProperty("json").GetInt32());
         }
 
         [Fact(DisplayName = "Formato de período incorrecto para la frecuencia: 400")]
@@ -119,7 +123,13 @@ namespace BackendDF.Tests
         {
             var (_, json, _) = await Get("/api/meta");
             Assert.Equal("2026-07", json.GetProperty("ultimoCorteComun").GetString());
-            Assert.Contains(json.GetProperty("advertencias").EnumerateArray(), a => a.GetString()!.Contains("balances/: 101 archivos"));
+            // Datos de oct-2026: ya no hay archivos de balances fuera del catálogo; se advierten los
+            // cuadros geográficos duplicados en base_estru_sistema y base_cartera.
+            Assert.Contains(json.GetProperty("advertencias").EnumerateArray(), a => a.GetString()!.Contains("aparece en más de un archivo"));
+            var porFuente = json.GetProperty("cuadrosPorFuente");   // sin BD: todos JSON
+            Assert.Equal(0, porFuente.GetProperty("bd").GetInt32());
+            Assert.Equal(0, porFuente.GetProperty("mixto").GetInt32());
+            Assert.True(porFuente.GetProperty("json").GetInt32() > 200);
         }
 
         [Fact(DisplayName = "ETag + Cache-Control y 304 con If-None-Match")]

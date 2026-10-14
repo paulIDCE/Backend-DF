@@ -1,6 +1,7 @@
 using System.Text.Json;
 using BackendDF.Common.Utils;
 using BackendDF.Data.FuenteJson;
+using BackendDF.Data.Repositorios;
 using BackendDF.Logic.Dominio;
 using BackendDF.Logic.Services;
 using BackendDF.Models.Entities;
@@ -91,6 +92,32 @@ namespace BackendDF.Tests
         {
             Assert.Equal("ASOCIACION MUTUALISTA", Texto.Normalizar(" Asociación mutualista "));
             Assert.Equal(["@1", "Percentil 75"], Texto.Separar("@1, Percentil 75,,@1"));
+        }
+
+        [Theory(DisplayName = "Fase 3: último mes sin historia según la operación y el primer mes de la BD")]
+        [InlineData("NIVEL", "NIVEL", "SUMA", "2024-01", null)]
+        [InlineData("ANUALIZADO", "NIVEL", "SUMA", "2024-01", null)]
+        [InlineData("VARIACION_1", "NIVEL", "SUMA", "2024-01", "2024-01")]
+        [InlineData("VARIACION_12", "RETARDO_12", "RATIO", "2024-01", "2024-12")]
+        [InlineData("VARIACION_12", "RETARDO_12", "RATIO", "2024-05", "2025-04")]
+        [InlineData("ANUALIZADO", "PROMEDIO_DIC_ROA", "RATIO", "2024-01", "2024-12")]
+        [InlineData("ANUALIZADO", "BASE_ROE_DIC", "RATIO", "2024-12", "2024-12")]
+        [InlineData("VARIACION_12", "RETARDO_12", "JSON", "2024-01", null)]
+        [InlineData("NIVEL", "RETARDO_12", "SUMA", "2024-01", null)]
+        public void SinHistoriaHasta(string opN, string opD, string calculo, string desde, string? esperado)
+        {
+            var fila = new FilaCatalogoBd(1, "*", "", 10, "X", null, null, "X", 0, null, null, calculo, opN, opD);
+            Assert.Equal(esperado, fila.SinHistoriaHasta(desde));
+        }
+
+        [Fact(DisplayName = "Fase 3: la marca sin historia solo se publica si cae dentro de los períodos pedidos")]
+        public void SinHistoriaVisible()
+        {
+            Assert.Equal("2024-12", Periodos.SinHistoriaVisible("2024-12", ["2024-01", "2024-02"]));
+            Assert.Equal("2024-12", Periodos.SinHistoriaVisible("2024-12", ["2024-12", "2025-01"]));
+            Assert.Null(Periodos.SinHistoriaVisible("2024-12", ["2025-01"]));
+            Assert.Null(Periodos.SinHistoriaVisible("2024-12", []));
+            Assert.Null(Periodos.SinHistoriaVisible(null, ["2024-01"]));
         }
     }
 }

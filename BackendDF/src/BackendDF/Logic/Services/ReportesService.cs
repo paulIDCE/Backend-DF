@@ -50,10 +50,14 @@ namespace BackendDF.Logic.Services
 
             var periodos = Periodos.Filtrar(reporte.Periodos, d, h);
             var alineador = new Alineador(periodos);
+            var fuente = OrigenDatos.Agregar(cuentas.Select(c => c.Origen));
             var dto = new ReporteDTO(
                 new EntidadReporteDTO(entidad.Id, entidad.Nombre, entidad.Tamano, entidad.Rango, entidad.Provincia),
                 periodos,
-                cuentas.Select(c => new CuentaReporteDTO(c.Cuc, c.Variable, alineador.Alinear(reporte.Periodos, c.Valores))).ToList());
+                cuentas.Select(c => new CuentaReporteDTO(c.Cuc, c.Variable, alineador.Alinear(reporte.Periodos, c.Valores),
+                    Periodos.SinHistoriaVisible(c.SinHistoriaHasta, periodos), c.Origen)).ToList(),
+                fuente.Origen,
+                new FilasPorFuenteDTO(fuente.Bd, fuente.Json, fuente.SinFuente));
 
             return new ConFaltantes<ReporteDTO>(dto, noEncontrados);
         }

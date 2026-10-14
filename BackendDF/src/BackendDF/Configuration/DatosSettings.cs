@@ -37,6 +37,10 @@ namespace BackendDF.Configuration
         /// <summary>Mapa slug del backend → IFIID/RUC. Relativo a la raíz del proyecto (ContentRoot).</summary>
         public string RutaMapaEntidades { get; set; } = "Data/FuenteSql/mapa-entidades.json";
 
+        // Las tres listas siguientes solo aplican a los cuadros que NO están en el catálogo de la BD
+        // (Fase 2, db/fase2), o si el catálogo no está instalado. Vacías = valores por defecto de
+        // ReglasCuadro. Para los cuadros del catálogo manda dbo.Cuadro / dbo.CuadroFila.
+
         /// <summary>Cuadros cuyas filas de cuenta (y los indicadores de EFI05) se leen de SQL.</summary>
         public string[] CuadrosSql { get; set; } = [];
 
